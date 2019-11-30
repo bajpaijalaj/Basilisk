@@ -9,7 +9,7 @@ public class Benchmark {
         ProcessBuilder pb = new ProcessBuilder("sh",benchmarkpath, port, rootpwd);
         int exitCode = -1;
         Process p = pb.start();
-        System.out.println("Iguana started.. = ");
+        System.out.println("Iguana started.. Benchmark path : " + benchmarkpath + ". Port : " + port + ". Root pwd : " + rootpwd);
         InputStream stderr = p.getErrorStream();
 
         InputStreamReader isr = new InputStreamReader(stderr);
