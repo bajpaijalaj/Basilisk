@@ -5,6 +5,7 @@ import de.upb.dss.basilisk.bll.Benchmark;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.*;
 import java.util.Properties;
 
 @RestController
@@ -24,10 +25,14 @@ public class BasiliskAPIController {
 
         int exitcode = -1;
 
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+
         try {
             exitcode = Benchmark.runBenchmark(condigpath,tentrisport, rootpwd);
         } catch (Exception ex) {
-            return ex.getStackTrace().toString();
+            ex.printStackTrace(pw);
+            return sw.toString();
         }
 
         if(exitcode == 0) {
