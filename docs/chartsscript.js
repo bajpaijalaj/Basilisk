@@ -40,25 +40,6 @@ function move(temp) {
   }
 }
 function drawChart() {
-  var data = google.visualization.arrayToDataTable([
-    ['No. of Clients', 'T', 'F', 'V'],
-    ['1', 1000, 500, 300],
-    ['4', 1200, 450, 450],
-    ['8', 600, 1000, 400],
-    ['16', 1000, 570, 340]
-  ]);
-  var bar_chart_options = {
-    chart: {
-      title: 'Performance',
-      subtitle: 'Tentris, Fuseki, and Virtuoso'          
-    },
-    bars: 'vertical',
-    legend: { position: 'none' },
-    hAxis: { format: 'decimal' },
-    height: 450,
-    colors: ['#1b9e76', '#d95f01', '#7570b2']
-  };
-  
   var line_data = new google.visualization.DataTable();
   line_data.addColumn('number', 'Day');
   line_data.addColumn('number', 'T');
@@ -153,19 +134,15 @@ function drawChart() {
       }
     }
   };
-  var bar_chart = new google.charts.Bar(document.getElementById('bar_chart'));
-  bar_chart.draw(data, google.charts.Bar.convertOptions(bar_chart_options));
   var boxPlot_chart = new google.visualization.LineChart(document.getElementById('boxplot_chart'));
   boxPlot_chart.draw(dataTable, boxPlot_options);
-  var line_chart = new google.charts.Line(document.getElementById('line_chart'));
-  line_chart.draw(line_data, google.charts.Line.convertOptions(line_options));
 }
-function drawsheet() {
-    var queryString = encodeURIComponent('select E,avg(H) group by E');
 
-    var query = new google.visualization.Query(
-        ' https://docs.google.com/spreadsheets/d/19DWy_pJGP2ZbV6D3iHW5mioKRBVPkjfSUyL3twmFwB8/gviz/tq?sheet=Sheet1&headers=1&tq=' + queryString);
-    query.send(handleSampleDataQueryResponse);
+  function drawsheet() {
+    var queryString2 = encodeURIComponent('select F,avg(G) group by F,E');
+    var query2 = new google.visualization.Query(
+        ' https://docs.google.com/spreadsheets/d/19DWy_pJGP2ZbV6D3iHW5mioKRBVPkjfSUyL3twmFwB8/gviz/tq?sheet=Sheet1&headers=1&tq=' + queryString2);
+    query2.send(handleSampleDataQueryResponse);
   }
  
 
@@ -176,6 +153,32 @@ function drawsheet() {
     }
 
     var data = response.getDataTable();
-    var chart = new google.visualization.ColumnChart(document.getElementById('other_stats'));
-    chart.draw(data, { height: 400 });
-  }
+    var bar_chart_options = {
+        chart: {
+          title: 'Performance',
+          subtitle: 'Tentris, Fuseki, and Virtuoso'          
+        },
+        bars: 'vertical',
+        legend: { position: 'none' },
+        is3D: true, 
+        hAxis : {textPosition: '#ffffff'},
+        height: 450,
+        width:400,
+        colors: ['#1b9e76', '#d95f01', '#7570b2']
+    };
+    var line_options = {
+    chart: {
+        title: 'QpS'
+    },
+    legend: { position: 'none' },
+    width: 900,
+    height: 500
+    };
+
+  var bar_chart = new google.charts.Bar(document.getElementById('bar_chart'));
+  bar_chart.draw(data, google.charts.Bar.convertOptions(bar_chart_options));
+
+  var line_chart = new google.charts.Line(document.getElementById('line_chart'));
+  line_chart.draw(data, google.charts.Line.convertOptions(line_options));
+}
+  
