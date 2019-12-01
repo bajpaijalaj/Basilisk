@@ -35,10 +35,26 @@ public class BasiliskAPIController {
             return sw.toString();
         }
 
-        if(exitcode == 0) {
-            return "Successfully ran the benchmark";
-        } else {
-            return "We ran into problems";
-        }
+	try
+	{
+		File file = new File("/home/dss/continuousBM/log/start-benchmarking.err");
+		BufferedReader br = new BufferedReader(new FileReader(file));
+
+		String message = " ";
+		String msg;
+		while ((msg = br.readLine()) != null)
+		{
+			message += msg + "\n";
+		}
+
+            	return message;
+	}catch (Exception e)
+	{
+		if(exitcode == 0) {
+			return "Successfully ran";
+		}else{
+			return "Something went wrong.";
+		}
+	}
     }
 }
