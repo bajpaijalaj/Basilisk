@@ -1,6 +1,5 @@
 google.charts.load('current', { 'packages': ['bar', 'corechart', 'line'] });
 google.charts.setOnLoadCallback(drawsheet);
-google.charts.setOnLoadCallback(drawChart);
 $(document).ready(function () {
   $("#close").click(function () {
     $("#menuId").slideUp("medium");
@@ -39,7 +38,34 @@ function move(temp) {
     $("#other_stats").slideDown("medium");
   }
 }
-function drawChart() {
+function drawChart(response) {
+  if (response.isError()) {
+    alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+    return;
+  }
+
+  var data = response.getDataTable();
+  var bar_chart_options = {
+      chart: {
+        title: 'Performance',
+        subtitle: 'Tentris, Fuseki, and Virtuoso'          
+      },
+      bars: 'vertical',
+      legend: { position: 'none' },
+      is3D: true, 
+      hAxis : {textPosition: '#ffffff'},
+      height: 450,
+      width: 500,
+      colors: ['#1b9e76', '#d95f01', '#7570b2']
+  };
+  var line_options = {
+  chart: {
+      title: 'QpS'
+  },
+  legend: { position: 'none' },
+  width: 900,
+  height: 500
+  };
   var line_data = new google.visualization.DataTable();
   line_data.addColumn('number', 'Day');
   line_data.addColumn('number', 'T');
@@ -136,13 +162,19 @@ function drawChart() {
   };
   var boxPlot_chart = new google.visualization.LineChart(document.getElementById('boxplot_chart'));
   boxPlot_chart.draw(dataTable, boxPlot_options);
+
+  var bar_chart = new google.charts.Bar(document.getElementById('bar_chart'));
+  bar_chart.draw(data, google.charts.Bar.convertOptions(bar_chart_options));
+
+  var line_chart = new google.charts.Line(document.getElementById('line_chart'));
+  line_chart.draw(data, google.charts.Line.convertOptions(line_options));
 }
 
   function drawsheet() {
     var queryString2 = encodeURIComponent('select F,avg(G) group by F,E');
     var query2 = new google.visualization.Query(
         ' https://docs.google.com/spreadsheets/d/19DWy_pJGP2ZbV6D3iHW5mioKRBVPkjfSUyL3twmFwB8/gviz/tq?sheet=Sheet1&headers=1&tq=' + queryString2);
-    query2.send(handleSampleDataQueryResponse);
+    query2.send(drawChart);
   }
  
 
@@ -180,5 +212,28 @@ function drawChart() {
 
   var line_chart = new google.charts.Line(document.getElementById('line_chart'));
   line_chart.draw(data, google.charts.Line.convertOptions(line_options));
+}
+function downloadRdf(){
+  alert("downloadRDF() method called")
+}
+
+function downloadCsv(){
+  alert("downloadCSV() method called")
+}
+
+function displayGraph(){
+  alert("run query for " + document.querySelector('input[name = "store"]:checked').value 
+      + " " + document.querySelector('input[name = "store"]:checked').id );
+
+}
+function clearGraph(){
+  alert("clear() method called")
+   var checks = document.querySelectorAll('#stores' + ' input[type="checkbox"]');
+   for(var i =0; i< checks.length;i++){
+     var check = checks[i];
+     if(!check.disabled){
+         check.checked = false;
+ }
+}
 }
   
