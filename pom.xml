@@ -24,7 +24,7 @@
          <artifactId>freemarker</artifactId>
          <scope>system</scope>
          <version>2.3.29</version>
-         <systemPath>${basedir}\lib\freemarker.jar</systemPath>
+         <systemPath>${basedir}\src\lib\freemarker.jar</systemPath>
       </dependency>
     </dependencies>
 
