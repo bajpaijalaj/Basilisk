@@ -7,14 +7,38 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.Version;
+
 
 public class Benchmark {
 	static Logger logger;
 	static File dockerFile = new File("../../continuousBM/bmWorkSpace/Dockerfile");
 	static File bmWorkSpace = new File("../../continuousBM/bmWorkSpace/");
 	static File iguanaPath = new File("../../continuousBM/iguana/");
-    public static int runBenchmark(String benchmarkpath, String port ,String rootpwd, String serverName, String testDataset, String configPath) throws IOException, InterruptedException {
+	static String serverName, port, testDataset;
+	
+    public static int runBenchmark(String argPort, String argServerName, String argTestDataSet) throws IOException, InterruptedException 
+    {
+    	//Set all the required info for running the benchmark.
+    	serverName = argServerName;
+        port = argPort;
+        testDataset = argTestDataSet;
         
+        
+        //Run the triple stores
+        runTripleStores();
+        
+        
+        
+    	
+        return 0;
+    }
+    
+    
+    protected static int runTripleStores()
+    {
     	String cmd = "";
     	
     	
@@ -91,7 +115,7 @@ public class Benchmark {
                 TimeUnit.SECONDS.sleep(10);
                 if(p.isAlive())
                 {
-                        runIguana(configPath, serverName);
+                        runIguana();
                 }
                 else
                 {
@@ -121,7 +145,7 @@ public class Benchmark {
         return 0;
     }
     
-    public static int runIguana(String configPath, String serverName) throws Exception
+    public static int runIguana() throws Exception
     {
     	String s = "", log = "", err = "";
     	String dockerId = "";
@@ -149,8 +173,9 @@ public class Benchmark {
         	stdInput.close();
         	stdError.close();
         	
-        	cmd = "./start-iguana.sh "
-        			+ configPath;
+        	//Set the configuration file of Iguana before running it.
+        	setIguanaConfigFile();
+        	cmd = "./start-iguana.sh benchmark.config";
         	
         	p = Runtime.getRuntime().exec(cmd, null, iguanaPath);
 
@@ -213,5 +238,60 @@ public class Benchmark {
         System.out.println(dockerId);
 
     	return 0;
+    }
+    
+    protected static int setIguanaConfigFile()
+    {
+    	Configuration cfg = new Configuration(new Version("2.3.23"));
+
+        cfg.setClassForTemplateLoading(Benchmark.class, "/");
+        cfg.setDefaultEncoding("UTF-8");
+
+        try
+        {
+        	Template template = cfg.getTemplate("iguanaConfig.ftl");
+
+            Map<String, Object> templateData = new HashMap<>();
+            templateData.put("port", "9080");
+            templateData.put("testData", "sp2b.txt");
+
+            StringWriter out = new StringWriter();
+                template.process(templateData, out);
+                System.out.println(out.getBuffer().toString());
+
+                out.flush();
+                
+                String fileSeparator = System.getProperty("file.separator");
+                String configPath = ".."+fileSeparator
+                		+".."+fileSeparator
+                		+"continuousBM"+fileSeparator
+                		+"iguana"+fileSeparator
+                		+"benchmark.config";
+                
+                File configFile = new File(configPath);
+                
+                if(configFile.exists())
+                {
+                	if(!configFile.delete())
+                	{
+                		System.err.println("Could not gnerate config file");
+                		return -1;
+                	}
+                }
+                if(configFile.createNewFile())
+                {
+                	FileOutputStream fos = new FileOutputStream(configPath);
+                	fos.write(out.toString().getBytes());
+                	fos.flush();
+                	fos.close();
+                    System.out.println(configPath+" File Created");
+                }else 
+                	System.out.println("Something went wrong while creating the file "+configPath+"");
+        	}
+        	catch(Exception e)
+        	{
+        		System.err.println(e);
+        	}
+        return 0;
     }
 }
