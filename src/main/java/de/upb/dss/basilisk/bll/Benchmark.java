@@ -9,14 +9,15 @@ import java.util.logging.SimpleFormatter;
 
 
 public class Benchmark {
+	static Logger logger;
     public static int runBenchmark(String benchmarkpath, String port ,String rootpwd, String serverName, String testDataset) throws IOException, InterruptedException {
         
     	String cmd = "";
-    	File dockerFile = new File("../continuousBM/bmWorkSpace/Dockerfile");
-    	File bmWorkSpace = new File("../continuousBM/bmWorkSpace/");
+    	File dockerFile = new File("../../../../../../../../../continuousBM/bmWorkSpace/Dockerfile");
+    	File bmWorkSpace = new File("../../../../../../../../../continuousBM/bmWorkSpace/");
     	
     	String s = null, log = "", err = "";
-        Logger logger = Logger.getLogger("MyLog");
+        logger = Logger.getLogger("MyLog");
         FileHandler fileHandler;
         
         
@@ -86,7 +87,7 @@ public class Benchmark {
                 TimeUnit.SECONDS.sleep(10);
                 if(p.isAlive())
                 {
-                        runIguana();
+                        runIguana(bmWorkSpace);
                 }
 
                 logger.info("Successfully built docker image\n");
@@ -108,8 +109,30 @@ public class Benchmark {
         return 0;
     }
     
-    public static int runIguana()
+    public static int runIguana(File bmWorkSpace) throws Throwable
     {
+    	String s = "", log = "", err = "";
+    	String dockerId = "";
+    	String cmd = "docker images -q cbm:tentrise";
+    	Process p = Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
+
+        BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+
+        System.out.println("Here is the standard output of the command:\n");
+        while ((s = stdInput.readLine()) != null)
+        {
+        	dockerId = s;
+        }
+
+        if(dockerId == "")
+        {
+        	System.out.println("Empty not existed docker container");
+        	
+        }
+        
+        System.out.println(dockerId);
+
     	return 0;
     }
 }
