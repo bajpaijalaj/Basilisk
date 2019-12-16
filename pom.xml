@@ -20,11 +20,9 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
       <dependency>
-         <groupId>freemarker</groupId>
-         <artifactId>freemarker</artifactId>
-         <scope>system</scope>
-         <version>2.3.29</version>
-         <systemPath>${basedir}\src\lib\freemarker-2.3.29.jar</systemPath>
+         <groupId>org.freemarker</groupId>
+    	 <artifactId>freemarker</artifactId>
+    	 <version>2.3.29</version>
       </dependency>
     </dependencies>
 
