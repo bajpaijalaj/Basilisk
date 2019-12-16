@@ -10,11 +10,13 @@ import java.util.logging.SimpleFormatter;
 
 public class Benchmark {
 	static Logger logger;
-    public static int runBenchmark(String benchmarkpath, String port ,String rootpwd, String serverName, String testDataset) throws IOException, InterruptedException {
+	static File dockerFile = new File("../../continuousBM/bmWorkSpace/Dockerfile");
+	static File bmWorkSpace = new File("../../continuousBM/bmWorkSpace/");
+	static File iguanaPath = new File("../../continuousBM/iguana/");
+    public static int runBenchmark(String benchmarkpath, String port ,String rootpwd, String serverName, String testDataset, String configPath) throws IOException, InterruptedException {
         
     	String cmd = "";
-    	File dockerFile = new File("../../../../../../../../../continuousBM/bmWorkSpace/Dockerfile");
-    	File bmWorkSpace = new File("../../../../../../../../../continuousBM/bmWorkSpace/");
+    	
     	
     	String s = null, log = "", err = "";
         logger = Logger.getLogger("MyLog");
@@ -87,7 +89,11 @@ public class Benchmark {
                 TimeUnit.SECONDS.sleep(10);
                 if(p.isAlive())
                 {
-                        runIguana(bmWorkSpace);
+                        runIguana(configPath);
+                }
+                else
+                {
+                	System.out.println("P is not alive");
                 }
 
                 logger.info("Successfully built docker image\n");
@@ -109,7 +115,7 @@ public class Benchmark {
         return 0;
     }
     
-    public static int runIguana(File bmWorkSpace) throws Exception
+    public static int runIguana(String configPath) throws Exception
     {
     	String s = "", log = "", err = "";
     	String dockerId = "";
@@ -128,7 +134,47 @@ public class Benchmark {
         if(dockerId == "")
         {
         	System.out.println("Empty not existed docker container");
+        	return -1;
+        }
+        else
+        {
+        	stdInput.close();
+        	stdError.close();
         	
+        	cmd = "./start-iguana.sh "
+        			+ configPath;
+        	
+        	p = Runtime.getRuntime().exec(cmd, null, iguanaPath);
+
+            stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+
+            while ((s = stdInput.readLine()) != null)
+            {
+                    log = log + "\n" + s;
+            }
+
+            logger.info(log);
+
+            System.out.println("Here is the standard error of the command (if any):\n");
+
+            while ((s = stdError.readLine()) != null)
+            {
+                    err = err + "\n" + s;
+            }
+
+            System.out.println(err);
+            p.waitFor();
+            int exitCode = p.exitValue();
+            
+            
+            if(exitCode != 0)
+            {
+                    System.out.println("Something went wrong while building the docker");
+                    System.out.println("Exit code = " + exitCode);
+                    System.out.println("Error message = \n" + err);
+                    return 50;
+            }
         }
         
         System.out.println(dockerId);

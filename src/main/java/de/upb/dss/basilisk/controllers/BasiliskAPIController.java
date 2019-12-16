@@ -29,7 +29,7 @@ public class BasiliskAPIController {
         PrintWriter pw = new PrintWriter(sw);
 
         try {
-            exitcode = Benchmark.runBenchmark(condigpath,tentrisport, rootpwd, "tentris", "sp2b.nt");
+            exitcode = Benchmark.runBenchmark(condigpath,"9080" , rootpwd, "tentris", "sp2b.nt", "tentrisbenchmark.config");
         } catch (Exception ex) {
             ex.printStackTrace(pw);
             return sw.toString();
