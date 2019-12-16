@@ -242,13 +242,15 @@ public class Benchmark {
     
     protected static int setIguanaConfigFile()
     {
-    	Configuration cfg = new Configuration(new Version("2.3.23"));
+    	Configuration cfg = new Configuration(Configuration.VERSION_2_3_29);
 
-        cfg.setClassForTemplateLoading(Benchmark.class, "/");
-        cfg.setDefaultEncoding("UTF-8");
+//        cfg.setClassForTemplateLoading(Benchmark.class, "/");
+    	
 
         try
         {
+        	cfg.setClassForTemplateLoading(Benchmark.class, ".");
+            cfg.setDefaultEncoding("UTF-8");
         	Template template = cfg.getTemplate("iguanaConfig.ftl");
 
             Map<String, Object> templateData = new HashMap<>();
