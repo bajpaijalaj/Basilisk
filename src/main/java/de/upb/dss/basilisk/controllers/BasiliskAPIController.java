@@ -18,7 +18,7 @@ public class BasiliskAPIController {
     @RequestMapping("/runbenchmark")
     public String runBenchmark() {
         Properties appProps = Basilisk.applicationProperties;
-
+        
         String condigpath = appProps.getProperty("benchmarkpath");
         String tentrisport = appProps.getProperty("tentrisport");
         String rootpwd = appProps.getProperty("rootpassword");
@@ -29,7 +29,7 @@ public class BasiliskAPIController {
         PrintWriter pw = new PrintWriter(sw);
 
         try {
-            exitcode = Benchmark.runBenchmark(condigpath,"9080" , rootpwd, "tentris", "sp2b.nt", "tentrisbenchmark.config");
+            exitcode = Benchmark.runBenchmark(condigpath,"9080" , rootpwd, "tentris", "sp2b.nt", "./cfg/tentrisbenchmark.config");
         } catch (Exception ex) {
             ex.printStackTrace(pw);
             return sw.toString();

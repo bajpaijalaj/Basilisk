@@ -102,8 +102,12 @@ public class Benchmark {
 
                 logger.info("Running the tentris server\n");
 
+                System.out.println("closing std out file");
                 stdInput.close();
+                System.out.println("closed std out file");
+                System.out.println("closing std err file");
                 stdError.close();
+                System.out.println("closed std err file");
                 
                 
           }
@@ -173,27 +177,36 @@ public class Benchmark {
             p.waitFor();
             int exitCode = p.exitValue();
             
+            cmd = "docker kill "
+                    + serverName + "_server";
+            p = Runtime.getRuntime().exec(cmd, null, iguanaPath);
+            p.waitFor();
+
+            cmd = "docker system prune";
+            p = Runtime.getRuntime().exec(cmd, null, iguanaPath);
+
+            OutputStream out = p.getOutputStream();
+            out.write("y".getBytes());
+            out.close();
+            p.waitFor();
+
+            while ((s = stdError.readLine()) != null)
+            {
+            	err = err + "\n" + s;
+                System.err.println(s);
+            }
+
+            cmd = "docker image rm cbm:"
+                    + serverName;
+            p = Runtime.getRuntime().exec(cmd, null, iguanaPath);
+            p.waitFor();
             
             if(exitCode != 0)
             {
-                    System.out.println("Something went wrong while building the docker");
-                    System.out.println("Exit code = " + exitCode);
-                    System.out.println("Error message = \n" + err);
-                    
-                    cmd = "docker kill "
-                    		+ serverName + "_server";
-                    p = Runtime.getRuntime().exec(cmd, null, iguanaPath);
-                    p.waitFor();
-                    
-                    cmd = "docker system prune";
-                    p = Runtime.getRuntime().exec(cmd, null, iguanaPath);
-                    p.waitFor();
-                    
-                    cmd = "docker image rm cbm:"
-                    		+ serverName;
-                    p = Runtime.getRuntime().exec(cmd, null, iguanaPath);
-                    p.waitFor();
-                    return 50;
+            	System.out.println("Something went wrong while building the docker");
+                System.out.println("Exit code = " + exitCode);
+                System.out.println("Error message = \n" + err);
+                return 50;
             }
         }
         
