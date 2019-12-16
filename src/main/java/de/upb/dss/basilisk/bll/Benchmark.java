@@ -109,7 +109,7 @@ public class Benchmark {
         return 0;
     }
     
-    public static int runIguana(File bmWorkSpace) throws Throwable
+    public static int runIguana(File bmWorkSpace) throws Exception
     {
     	String s = "", log = "", err = "";
     	String dockerId = "";
