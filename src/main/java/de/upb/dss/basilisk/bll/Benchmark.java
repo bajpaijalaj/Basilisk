@@ -45,6 +45,7 @@ public class Benchmark {
                 while ((s = stdInput.readLine()) != null)
                 {
                         log = log + "\n" + s;
+                        System.out.println(s);
                 }
 
                 logger.info(log);
@@ -54,6 +55,7 @@ public class Benchmark {
                 while ((s = stdError.readLine()) != null)
                 {
                         err = err + "\n" + s;
+                        System.err.println(s);
                 }
 
                 System.out.println(err);
@@ -89,7 +91,7 @@ public class Benchmark {
                 TimeUnit.SECONDS.sleep(10);
                 if(p.isAlive())
                 {
-                        runIguana(configPath);
+                        runIguana(configPath, serverName);
                 }
                 else
                 {
@@ -115,11 +117,12 @@ public class Benchmark {
         return 0;
     }
     
-    public static int runIguana(String configPath) throws Exception
+    public static int runIguana(String configPath, String serverName) throws Exception
     {
     	String s = "", log = "", err = "";
     	String dockerId = "";
-    	String cmd = "docker images -q cbm:tentrise";
+    	String cmd = "docker images -q cbm:"
+    			+ serverName;
     	Process p = Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
 
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -131,6 +134,7 @@ public class Benchmark {
         	dockerId = s;
         }
 
+        
         if(dockerId == "")
         {
         	System.out.println("Empty not existed docker container");
@@ -152,6 +156,7 @@ public class Benchmark {
             while ((s = stdInput.readLine()) != null)
             {
                     log = log + "\n" + s;
+                    System.out.println(s);
             }
 
             logger.info(log);
@@ -161,6 +166,7 @@ public class Benchmark {
             while ((s = stdError.readLine()) != null)
             {
                     err = err + "\n" + s;
+                    System.err.println(s);
             }
 
             System.out.println(err);
@@ -173,6 +179,20 @@ public class Benchmark {
                     System.out.println("Something went wrong while building the docker");
                     System.out.println("Exit code = " + exitCode);
                     System.out.println("Error message = \n" + err);
+                    
+                    cmd = "docker kill "
+                    		+ serverName + "_server";
+                    p = Runtime.getRuntime().exec(cmd, null, iguanaPath);
+                    p.waitFor();
+                    
+                    cmd = "docker system prune";
+                    p = Runtime.getRuntime().exec(cmd, null, iguanaPath);
+                    p.waitFor();
+                    
+                    cmd = "docker image rm cbm:"
+                    		+ serverName;
+                    p = Runtime.getRuntime().exec(cmd, null, iguanaPath);
+                    p.waitFor();
                     return 50;
             }
         }
