@@ -17,14 +17,15 @@ public class Benchmark {
 	static File dockerFile = new File("../../continuousBM/bmWorkSpace/Dockerfile");
 	static File bmWorkSpace = new File("../../continuousBM/bmWorkSpace/");
 	static File iguanaPath = new File("../../continuousBM/iguana/");
-	static String serverName, port, testDataset;
+	static String serverName, port, testDataset, queryFile;
 	
-    public static int runBenchmark(String argPort, String argServerName, String argTestDataSet) throws IOException, InterruptedException 
+    public static int runBenchmark(String argPort, String argServerName, String argTestDataSet, String argQueryFile) throws IOException, InterruptedException 
     {
     	//Set all the required info for running the benchmark.
     	serverName = argServerName;
         port = argPort;
         testDataset = argTestDataSet;
+        queryFile = argQueryFile;
         
         
         //Run the triple stores
@@ -254,8 +255,8 @@ public class Benchmark {
         	Template template = cfg.getTemplate("iguanaConfig.ftl");
 
             Map<String, Object> templateData = new HashMap<>();
-            templateData.put("port", "9080");
-            templateData.put("testData", "sp2b.txt");
+            templateData.put("port", port);
+            templateData.put("testData", queryFile);
 
             StringWriter out = new StringWriter();
                 template.process(templateData, out);
