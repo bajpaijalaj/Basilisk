@@ -108,7 +108,7 @@ public class Benchmark {
                                     + serverName + "_server cbm:" + serverName
                                     + " -f /datasets/"
                                     + testDataset + " -p "
-                                    + port;
+                                    + port + " &";
 
                 System.out.println(command);
                 p = Runtime.getRuntime().exec(command, null, bmWorkSpace);
