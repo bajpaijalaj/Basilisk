@@ -128,7 +128,7 @@ public class Benchmark {
                 */
                 String command = "nohup docker run -p "
                                     + port + ":" + port
-                                    + " -v /../../continuousBM/testDataSet:/datasets --name "
+                                    + " -v /home/dss/continuousBM/testDataSet:/datasets --name "
                                     + serverName + "_server cbm:" + serverName
                                     + " -f /datasets/"
                                     + testDataset + " -p "
