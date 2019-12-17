@@ -102,7 +102,7 @@ public class Benchmark {
                 stdInput.close();
                 stdError.close();
 
-                String command = "docker run -p "
+                String command = "nohup docker run -p "
                                     + port + ":" + port
                                     + " -v /home/dss/continuousBM/testDataSet:/datasets --name "
                                     + serverName + "_server cbm:" + serverName
