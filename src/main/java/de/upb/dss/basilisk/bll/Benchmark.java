@@ -135,34 +135,65 @@ public class Benchmark {
                                     + port + " &";
 
                 //Run the command.
-                p = Runtime.getRuntime().exec(command, null, bmWorkSpace);
+                Runtime.getRuntime().exec(command, null, bmWorkSpace);
 
                 //Wait for 10 seconds to docker image to setup and keep running.
                 TimeUnit.SECONDS.sleep(10);
                 
                 //If the process is alive run Iguana benchmarl otherwise could not run the docker image.
-                if(p.isAlive())
+                //Command to check whether the respective docker image is running or not, to avoid the infinite loop.
+            	//docker images -q cbm:${serverName}
+                cmd = "docker images -q cbm:"
+            			+ serverName;
+            	
+            	//Run the command.
+            	p = Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
+
+            	//Track the input and error.
+                stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+                String dockerId = "";
+                
+                while ((s = stdInput.readLine()) != null)
                 {
-                	logger.info(serverName + " server is successfully running.\n");
-                    
-                	runIguana();
+                	dockerId = s;
+                }
+
+                
+                if(dockerId == "")
+                {
+                	System.out.println("Empty not existed docker container");
+                	return -1;
                 }
                 else
                 {
-                	stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-                	logger.info("Error/Warning of the command :\n");
-                	System.err.println("Error/Warning of the command :\n");
-                    while ((s = stdError.readLine()) != null)
-                    {
-                            err = err + "\n" + s;
-                            System.err.println(s);
-                    }
-                    
-                	System.out.println("Something went wrong while building the docker");
-                    System.out.println("Exit code = " + exitCode);
-                    System.out.println("Error message = \n" + err);
-                    return 50;
+                	runIguana();
                 }
+                
+                
+                
+//                if(p.isAlive())
+//                {
+//                	logger.info(serverName + " server is successfully running.\n");
+//                    
+//                	runIguana();
+//                }
+//                else
+//                {
+//                	stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+//                	logger.info("Error/Warning of the command :\n");
+//                	System.err.println("Error/Warning of the command :\n");
+//                    while ((s = stdError.readLine()) != null)
+//                    {
+//                            err = err + "\n" + s;
+//                            System.err.println(s);
+//                    }
+//                    
+//                	System.out.println("Something went wrong while running the docker");
+//                    System.out.println("Exit code = " + exitCode);
+//                    System.out.println("Error message = \n" + err);
+//                    return 50;
+//                }
 
                 
 
@@ -190,80 +221,50 @@ public class Benchmark {
     	String s = "";
     	String log = "";
     	String err = "";
-    	String dockerId = "";
-    	
-    	//Command to check whether the respective docker image is running or not, to avoid the infinite loop.
-    	//docker images -q cbm:${serverName}
-    	String cmd = "docker images -q cbm:"
-    			+ serverName;
-    	
-    	//Run the command.
-    	Process p = Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
+    	String cmd = "";
 
-    	//Track the input and error.
-        BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-
-        while ((s = stdInput.readLine()) != null)
-        {
-        	dockerId = s;
-        }
-
-        
-        if(dockerId == "")
-        {
-        	System.out.println("Empty not existed docker container");
-        	return -1;
-        }
-        else
-        {
-        	stdInput.close();
-        	stdError.close();
+       	//Set the Iguana configuration file respective to triple store before running it.
+       	setIguanaConfigFile();
+       	
+       	//Command to run the iguana script.
+       	cmd = "./start-iguana.sh benchmark.config";
         	
-        	//Set the Iguana configuration file respective to triple store before running it.
-        	setIguanaConfigFile();
-        	
-        	//Command to run the iguana script.
-        	cmd = "./start-iguana.sh benchmark.config";
-        	
-        	//Run the Iguana script
-        	p = Runtime.getRuntime().exec(cmd, null, iguanaPath);
+       	//Run the Iguana script
+       	Process p = Runtime.getRuntime().exec(cmd, null, iguanaPath);
 
         	//Track the output and error
-            stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+       	BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+       	BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
-            System.out.println("Output of the command is :\n");
-            logger.info("Output of the command is :\n");
-            while ((s = stdInput.readLine()) != null)
-            {
-                    log = log + "\n" + s;
-                    System.out.println(s);
-            }
-
-            logger.info(log);
-
-            System.out.println("Error/Warning of the command :\n");
-            logger.info("Error/Warning of the command :\n");
-            while ((s = stdError.readLine()) != null)
-            {
-                    err = err + "\n" + s;
-                    System.err.println(s);
-            }
-
-            //Wait for process to complete.
-            p.waitFor();
-            int exitCode = p.exitValue();
-            
-            if(exitCode != 0)
-            {
-            	System.out.println("Something went wrong while while running iguana");
-                System.out.println("Exit code = " + exitCode);
-                System.out.println("Error message = \n" + err);
-                return exitCode;
-            }
+        System.out.println("Output of the command is :\n");
+        logger.info("Output of the command is :\n");
+        while ((s = stdInput.readLine()) != null)
+        {
+        	log = log + "\n" + s;
+        	System.out.println(s);
         }
 
+        logger.info(log);
+
+        System.out.println("Error/Warning of the command :\n");
+        logger.info("Error/Warning of the command :\n");
+        while ((s = stdError.readLine()) != null)
+        {
+        	err = err + "\n" + s;
+            System.err.println(s);
+        }
+
+        //Wait for process to complete.
+        p.waitFor();
+        int exitCode = p.exitValue();
+           
+        if(exitCode != 0)
+        {
+         	System.out.println("Something went wrong while while running iguana");
+            System.out.println("Exit code = " + exitCode);
+            System.out.println("Error message = \n" + err);
+            return exitCode;
+        }
     	return 0;
     }
     
