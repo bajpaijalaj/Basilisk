@@ -6,6 +6,9 @@
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="chartsscript.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
   <style>
     body {
       margin: 0;
@@ -16,7 +19,8 @@
       position: -webkit-sticky;
       position: sticky;
       top: 0;
-      background-color: #f3b72e;
+      padding: 15px 15px 0px 15px;
+      background-color: #15568f;
       font-size: 20px;
       display: grid;
       grid-template-columns: 33.33% 33.33% 33.33%;
@@ -52,7 +56,9 @@
     .dropdown-content {
       display: none;
       position: absolute;
-      background-color: rgb(250, 241, 220);
+      background-color: white;
+      border-radius: 5px;
+      border: 1px solid white;
       min-width: 160px;
       box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
       z-index: 1;
@@ -81,8 +87,8 @@
 </head>
 
 <body>
-  <span id="close">[Collapse]</span>
-  <span id="open" hidden>[Expand]</span>
+  <span class="btn btn-outline-light btn-sm" style="background-color: #15568f; color: white" id="open">Expand</span>
+  <span class="btn btn-primary btn-sm" id="close" style="background-color: #fff">Collapse</span>
   <div class="menu" id="menuId">
     <div class="menu-1" id="stores">
       <form>
@@ -91,7 +97,7 @@
             <td>Tentris</td>
             <td>
               <div class="dropdown">
-                <label class="drop">Select Versions</label>
+                <label class="btn btn-outline-light dropdown-toggle btn-sm">Select Versions</label>
                 <div class="dropdown-content">
                   <input type="checkbox" id="version1" name="store" value="tentris"> Version 1</input><br>
                   <input type="checkbox" id="version2" name="store" value="tentris"> Version 2</input><br>
@@ -103,7 +109,7 @@
           <tr>
             <td>Fuseki</td>
             <td>
-              <div class="dropdown"><label class="drop">Select Versions</label>
+              <div class="dropdown"><label class="btn btn-outline-light dropdown-toggle btn-sm">Select Versions</label>
                 <div class="dropdown-content">
                   <input type="checkbox" id="version1" name="store" value="fuseki"> Version 1</input><br>
                   <input type="checkbox" id="version2" name="store" value="fuseki"> Version 2</input><br>
@@ -115,7 +121,7 @@
           <tr>
             <td>Virtuoso</td>
             <td>
-              <div class="dropdown"><label class="drop">Select Versions</label>
+              <div class="dropdown"><label class="btn btn-outline-light dropdown-toggle btn-sm">Select Versions</label>
                 <div class="dropdown-content">
                   <input type="checkbox" id="version1" name="store" value="Virtuoso"> Version 1</input><br>
                   <input type="checkbox" id="version2" name="store" value="Virtuoso"> Version 2</input><br>
@@ -125,13 +131,13 @@
             </td>
           </tr>
           <tr>
-            <td><label class="sub" onClick="displayGraph()">Submit</label></td>
-            <td><label class="clr" onClick="clearGraph()">Clear all</label></td>
+            <td><label class="btn btn-light btn-sm" style="margin-left: 0px" onClick="displayGraph()">Submit</label></td>
+            <td><label class="btn btn-outline-light btn-sm" style="margin-left: 55px" onClick="clearGraph()">Clear all</label></td>
           </tr>
         </table>
       </form>
     </div>
-    <div class="logo"><img src="./dummy_logo.png" /></div>
+    <div class="logo" style="width: 60px;"><img src="./dummy_logo.png" height="150" width="250" /></div>
     <div class="menu-2">
       <table style=" padding: 10px 10px 10px 10px;">
         <tr>
@@ -146,9 +152,9 @@
         </tr>
         <tr>
           <td>Download Results: &nbsp;
-              <label class="down" onclick="downloadRdf()">RDF Format</label>
+              <label class="btn btn-sm btn-outline-light" onclick="downloadRdf()">RDF Format</label>
               &nbsp;&nbsp;
-              <label class="down" onclick="downloadCsv()">CSV Format</label>
+              <label class="btn btn-sm btn-outline-light" onclick="downloadCsv()">CSV Format</label>
           </td>
         </tr>
       </table>
