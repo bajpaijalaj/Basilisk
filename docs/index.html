@@ -2,8 +2,11 @@
 <html>
 
 <head>
-    
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <link href="c3-0.7.10/c3.css" rel="stylesheet">
+  <script src="c3-0.7.10/c3.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+  <script src="papaparse.min.js"></script>
+
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="chartsscript.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
@@ -20,7 +23,7 @@
       position: sticky;
       top: 0;
       padding: 15px 15px 0px 15px;
-      background-color: #15568f;
+      background-color: #001030;
       font-size: 20px;
       display: grid;
       grid-template-columns: 33.33% 33.33% 33.33%;
@@ -89,7 +92,9 @@
 <body>
   <span class="btn btn-outline-light btn-sm" style="background-color: #15568f; color: white" id="open">Expand</span>
   <span class="btn btn-primary btn-sm" id="close" style="background-color: #fff">Collapse</span>
+  
   <div class="menu" id="menuId">
+    <div class="logo" style="width: 60px;"><img src="./Basilisk_Logo_ShivamBahedia.png" height="200" width="200" /></div>
     <div class="menu-1" id="stores">
       <form>
         <table style="padding: 10px 10px 10px 10px;">
@@ -137,14 +142,14 @@
         </table>
       </form>
     </div>
-    <div class="logo" style="width: 60px;"><img src="./dummy_logo.png" height="150" width="250" /></div>
+    
     <div class="menu-2">
       <table style=" padding: 10px 10px 10px 10px;">
         <tr>
           <td>
             <form>
               <input class="rad" type="radio" value="bar" name="chart" onclick="move('bar')" checked> Bar chart<br>
-              <input class="rad" type="radio" value="box" name="chart" onclick="move('box')"> Boxplot chart<br>
+              <input class="rad" type="radio" value="box" name="chart" onclick="move('box')"> Area Chart<br>
               <input class="rad" type="radio" value="line" name="chart" onclick="move('line')"> Line chart<br>
               <input class="rad" type="radio" value="other_stats" name="chart" onclick="move('other')"> Other stats<br>
             </form>
@@ -159,14 +164,23 @@
         </tr>
       </table>
     </div>
-
+    
   </div>
   <div class="content" style="width: 97%;">
     <div id="bar_chart" style="width: 100%;"></div>
-    <div id="boxplot_chart"></div>
-    <div id="line_chart"></div>
+    <div class="line_chart" id="boxplot_chart">
+      <div class="line_chart_col" id="boxplot_chart1"></div>
+      <div class="line_chart_col" id="boxplot_chart2"></div>
+      <div class="line_chart_col"id="boxplot_chart3"></div>
+    </div>
+    <div class="line_chart" id="line_chart">
+      <div class="line_chart_col" id="line_chart1"></div>
+      <div class="line_chart_col" id="line_chart2"></div>
+      <div class="line_chart_col"id="line_chart3"></div>
+    </div>
     <div id="other_stats"></div>
   </div>
+  
 
 </body>
 
