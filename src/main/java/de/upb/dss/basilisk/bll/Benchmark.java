@@ -316,13 +316,10 @@ public class Benchmark {
         {
         	String path = Benchmark.class.getResource("/iguanaConfig.ftl").getPath().replace("iguanaConfig.ftl", "");
         	//Set up the free marker configuration, with template loading class and path.
-        	cfg.setClassForTemplateLoading(Benchmark.class, path);
+        	cfg.setClassForTemplateLoading(Benchmark.class, "/");
             cfg.setDefaultEncoding("UTF-8");
             
             //Get the Iguana configuration template.
-            System.out.println(Benchmark.class.getResource("/iguanaConfig.ftl"));
-            Scanner sc = new Scanner(System.in);
-            sc.nextInt();
         	Template template = cfg.getTemplate("iguanaConfig.ftl");
 
         	//Port number and query file to insert into benchmark template
