@@ -322,7 +322,7 @@ public class Benchmark {
             System.out.println(Benchmark.class.getResource("/iguanaConfig.ftl"));
             Scanner sc = new Scanner(System.in);
             sc.nextInt();
-        	Template template = cfg.getTemplate(Benchmark.class.getResource("/iguanaConfig.ftl").toString());
+        	Template template = cfg.getTemplate(Benchmark.class.getResource("/iguanaConfig.ftl").getFile().toString());
 
         	//Port number and query file to insert into benchmark template
             Map<String, Object> templateData = new HashMap<>();
