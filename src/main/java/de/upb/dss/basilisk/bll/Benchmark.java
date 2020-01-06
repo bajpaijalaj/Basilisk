@@ -7,6 +7,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import de.upb.dss.basilisk.Basilisk;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.Version;
@@ -14,13 +15,26 @@ import freemarker.template.Version;
 
 public class Benchmark {
 	static Logger logger;
-	static File dockerFile = new File("../../continuousBM/bmWorkSpace/Dockerfile");
-	static File bmWorkSpace = new File("../../continuousBM/bmWorkSpace/");
-	static File iguanaPath = new File("../../continuousBM/iguana/");
+//	static File dockerFile = new File("../../continuousBM/bmWorkSpace/Dockerfile");
+//	static File bmWorkSpace = new File("../../continuousBM/bmWorkSpace/");
+//	static File iguanaPath = new File("../../continuousBM/iguana/");
+	
+	static File dockerFile;
+	static File bmWorkSpace;
+	static File iguanaPath;
+	static String logFilePath;
+	
 	static String serverName, port, testDataset, queryFile;
 	
     public static int runBenchmark(String argPort, String argServerName, String argTestDataSet, String argQueryFile) throws IOException, InterruptedException 
     {
+    	Properties appProps = Basilisk.applicationProperties;
+
+    	dockerFile = new File(appProps.getProperty("dockerFile"));
+    	bmWorkSpace = new File(appProps.getProperty("bmWorkSpace"));
+    	iguanaPath = new File(appProps.getProperty("iguanaPath"));
+    	logFilePath = appProps.getProperty("logFilePath");
+    	
     	//Set all the required info for running the benchmark.
     	serverName = argServerName;
         port = argPort;
@@ -48,11 +62,11 @@ public class Benchmark {
         logger = Logger.getLogger("MyLog");
         FileHandler fileHandler;
         
-        
         try
         {
         	//Set up the logger.
-        	fileHandler = new FileHandler("./logs/MyLogFile.log");
+//        	fileHandler = new FileHandler("./logs/MyLogFile.log");
+        	fileHandler = new FileHandler(logFilePath);
         	logger.addHandler(fileHandler);
         	SimpleFormatter formatter = new SimpleFormatter();
         	fileHandler.setFormatter(formatter);
