@@ -27,7 +27,6 @@ public class Benchmark {
         testDataset = argTestDataSet;
         queryFile = argQueryFile;
         
-        
         //Run the triple stores
         runTripleStores();
         
@@ -123,8 +122,8 @@ public class Benchmark {
                  * 
                  * Example for tentris.
                  * ${port} = 9080, ${serverName} = tentris, ${testDataset} = sp2b.nt
-                 * nohup docker run -p 9080:9080 -v ../../continuousBM/testDataSet:/datasets --name tentris_server cbm:tentris \ 
-                 * -f /dataset/ sp2b.nt -p 9080 &
+                 * nohup docker run -p 9080:9080 -v home/dss/continuousBM/testDataSet:/datasets --name tentris_server cbm:tentris \ 
+                 * -f /datasets/sp2b.nt -p 9080 &
                 */
                 String command = "nohup docker run -p "
                                     + port + ":" + port
@@ -320,6 +319,9 @@ public class Benchmark {
             cfg.setDefaultEncoding("UTF-8");
             
             //Get the Iguana configuration template.
+            Benchmark.class.getResource("iguanaConfig.ftl");
+            Scanner sc = new Scanner(System.in);
+            sc.nextInt();
         	Template template = cfg.getTemplate("iguanaConfig.ftl");
 
         	//Port number and query file to insert into benchmark template
