@@ -15,10 +15,6 @@ import freemarker.template.Version;
 
 public class Benchmark {
 	static Logger logger;
-//	static File dockerFile = new File("../../continuousBM/bmWorkSpace/Dockerfile");
-//	static File bmWorkSpace = new File("../../continuousBM/bmWorkSpace/");
-//	static File iguanaPath = new File("../../continuousBM/iguana/");
-	
 	static File dockerFile;
 	static File bmWorkSpace;
 	static File iguanaPath;
@@ -41,11 +37,13 @@ public class Benchmark {
         testDataset = argTestDataSet;
         queryFile = argQueryFile;
         
+        //Clear the docker, so that next benchmark can be run.
+        clearDocker();
+        
+        
         //Run the triple stores
         runTripleStores();
         
-        //Clear the docker, so that next benchmark can be run.
-        clearDocker();
     	
         return 0;
     }
@@ -64,8 +62,6 @@ public class Benchmark {
         
         try
         {
-        	//Set up the logger.
-//        	fileHandler = new FileHandler("./logs/MyLogFile.log");
         	fileHandler = new FileHandler(logFilePath);
         	logger.addHandler(fileHandler);
         	SimpleFormatter formatter = new SimpleFormatter();
@@ -328,7 +324,6 @@ public class Benchmark {
 
         try
         {
-        	String path = Benchmark.class.getResource("/iguanaConfig.ftl").getPath().replace("iguanaConfig.ftl", "");
         	//Set up the free marker configuration, with template loading class and path.
         	cfg.setClassForTemplateLoading(Benchmark.class, "/");
             cfg.setDefaultEncoding("UTF-8");
