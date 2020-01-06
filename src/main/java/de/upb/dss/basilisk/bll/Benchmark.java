@@ -319,7 +319,7 @@ public class Benchmark {
             cfg.setDefaultEncoding("UTF-8");
             
             //Get the Iguana configuration template.
-            Benchmark.class.getResource("iguanaConfig.ftl");
+            System.out.println(Benchmark.class.getResource("iguanaConfig.ftl"));
             Scanner sc = new Scanner(System.in);
             sc.nextInt();
         	Template template = cfg.getTemplate("iguanaConfig.ftl");
