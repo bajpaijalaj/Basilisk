@@ -135,13 +135,27 @@ public class Benchmark {
                  * nohup docker run -p 9080:9080 -v home/dss/continuousBM/testDataSet:/datasets --name tentris_server cbm:tentris \ 
                  * -f /datasets/sp2b.nt -p 9080 &
                 */
-                String command = "nohup docker run -p "
-                                    + port + ":" + port
-                                    + " -v /home/dss/continuousBM/testDataSet:/datasets --name "
-                                    + serverName + "_server cbm:" + serverName
-                                    + " -f /datasets/"
-                                    + testDataset + " -p "
-                                    + port + " &";
+                
+                String command = "";
+                
+                if(serverName.toLowerCase().equals("tentris"))
+                {
+                	command = "nohup docker run -p "
+                            + port + ":" + port
+                            + " -v /home/dss/continuousBM/testDataSet:/datasets --name "
+                            + serverName + "_server cbm:" + serverName
+                            + " -f /datasets/"
+                            + testDataset + " -p "
+                            + port + " &";
+                }
+                else if(serverName.toLowerCase().equals("virtuoso"))
+                {
+                	command = "nohup docker run -p "
+                            + port + ":" + port
+                            + " --name "
+                            + serverName + "_server cbm:" + serverName + " &";
+                }
+                
 
                 //Run the command.
                 Runtime.getRuntime().exec(command, null, bmWorkSpace);
