@@ -140,20 +140,20 @@ public class Benchmark {
                 
                 if(serverName.toLowerCase().equals("tentris"))
                 {
-                	command = "nohup docker run -p "
+                	command = "docker run -p "
                             + port + ":" + port
                             + " -v /home/dss/continuousBM/testDataSet:/datasets --name "
                             + serverName + "_server cbm:" + serverName
                             + " -f /datasets/"
                             + testDataset + " -p "
-                            + port + " &";
+                            + port;
                 }
                 else if(serverName.toLowerCase().equals("virtuoso"))
                 {
-                	command = "nohup docker run -p "
+                	command = "docker run -p "
                             + port + ":" + port
                             + " --name "
-                            + serverName + "_server cbm:" + serverName + " &";
+                            + serverName + "_server cbm:" + serverName;
                 }
                 
 
