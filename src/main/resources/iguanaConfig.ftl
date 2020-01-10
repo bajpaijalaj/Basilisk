@@ -4,7 +4,7 @@ blazegraph.class=org.aksw.iguana.rp.storage.impl.TriplestoreStorage
 blazegraph.constructorArgs=http://localhost:9999/sparql,http://localhost:9999/sparql
 
 # The Readable Name you want to give the triple store
-connection1.name=Tentris
+connection1.name=${connName}
 # The sparql Endpoint of the triple store
 connection1.service=http://0.0.0.0:${port}/sparql
 # The update Endpoint of the triple store (this is optional, if not provided Iguana will use the service address)
@@ -17,7 +17,7 @@ iguana.cc.connections=connection1
 
 ##### DATASET CONFIG #####
 # The Readable Name you want to give your Dataset
-dataset1.name=TentrisDB
+dataset1.name=${datasetName}
 
 iguana.cc.datasets=dataset1
 

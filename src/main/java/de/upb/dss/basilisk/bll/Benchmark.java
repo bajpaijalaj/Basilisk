@@ -19,10 +19,11 @@ public class Benchmark {
 	static File bmWorkSpace;
 	static File iguanaPath;
 	static String logFilePath;
+	static String configPath;
 	
-	static String serverName, port, testDataset, queryFile;
+	static String serverName, port, testDataset, queryFile, versionNumber;
 	
-    public static int runBenchmark(String argPort, String argServerName, String argTestDataSet, String argQueryFile) throws IOException, InterruptedException 
+    public static int runBenchmark(String argPort, String argServerName, String argTestDataSet, String argQueryFile, String argVersionNumber) throws IOException, InterruptedException 
     {
     	Properties appProps = Basilisk.applicationProperties;
 
@@ -30,12 +31,15 @@ public class Benchmark {
     	bmWorkSpace = new File(appProps.getProperty("bmWorkSpace"));
     	iguanaPath = new File(appProps.getProperty("iguanaPath"));
     	logFilePath = appProps.getProperty("logFilePath");
+    	configPath = appProps.getProperty("configPath");
+    	
     	
     	//Set all the required info for running the benchmark.
     	serverName = argServerName;
         port = argPort;
         testDataset = argTestDataSet;
         queryFile = argQueryFile;
+        versionNumber = argVersionNumber;
         
         //Clear the docker, so that next benchmark can be run.
         clearDocker();
@@ -45,6 +49,8 @@ public class Benchmark {
         runTripleStores();
         
     	
+      //Clear the docker, so that next benchmark can be run.
+        clearDocker();
         return 0;
     }
     
@@ -192,33 +198,6 @@ public class Benchmark {
                 {
                 	runIguana();
                 }
-                
-                
-                
-//                if(p.isAlive())
-//                {
-//                	logger.info(serverName + " server is successfully running.\n");
-//                    
-//                	runIguana();
-//                }
-//                else
-//                {
-//                	stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-//                	logger.info("Error/Warning of the command :\n");
-//                	System.err.println("Error/Warning of the command :\n");
-//                    while ((s = stdError.readLine()) != null)
-//                    {
-//                            err = err + "\n" + s;
-//                            System.err.println(s);
-//                    }
-//                    
-//                	System.out.println("Something went wrong while running the docker");
-//                    System.out.println("Exit code = " + exitCode);
-//                    System.out.println("Error message = \n" + err);
-//                    return 50;
-//                }
-
-                
 
                 System.out.println("closing std out file");
                 stdInput.close();
@@ -345,10 +324,14 @@ public class Benchmark {
             //Get the Iguana configuration template.
         	Template template = cfg.getTemplate("iguanaConfig.ftl");
 
+        	String connName = serverName + "$" + versionNumber;
+        	String datasetName = serverName + "$" + versionNumber + "$DB";
         	//Port number and query file to insert into benchmark template
             Map<String, Object> templateData = new HashMap<>();
             templateData.put("port", port);
             templateData.put("testData", queryFile);
+            templateData.put("connName", connName);
+            templateData.put("datasetName", datasetName);
 
             //Write port number and query file in to template
             StringWriter out = new StringWriter();
@@ -356,12 +339,6 @@ public class Benchmark {
             out.flush();
             
             //Dump that configuration into a configuration file called benchmark.config
-            String fileSeparator = System.getProperty("file.separator");
-            String configPath = ".."+fileSeparator
-                		+".."+fileSeparator
-                		+"continuousBM"+fileSeparator
-                		+"iguana"+fileSeparator
-                		+"benchmark.config";
                 
             File configFile = new File(configPath);
                 
