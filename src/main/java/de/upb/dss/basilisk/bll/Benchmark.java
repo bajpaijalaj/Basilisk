@@ -51,6 +51,7 @@ public class Benchmark {
         
     	//Move the results to results folder and rename it.
         renameResults();
+        
       //Clear the docker, so that next benchmark can be run.
         clearDocker();
         return 0;
@@ -63,7 +64,6 @@ public class Benchmark {
     	String result3 = appProps.getProperty("result3");
     	String result4 = appProps.getProperty("result4");
     	String result5 = appProps.getProperty("result5");
-    	String continousBM = appProps.getProperty("continousBM");
     	
     	String cmd = "mv " + result1 + " ../results/" + serverName + "_" + versionNumber + "_noClient1.nt";
 		
