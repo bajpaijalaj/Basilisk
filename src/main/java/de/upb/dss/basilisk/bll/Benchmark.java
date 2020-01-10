@@ -65,25 +65,25 @@ public class Benchmark {
     	String result5 = appProps.getProperty("result5");
     	String continousBM = appProps.getProperty("continousBM");
     	
-    	String cmd = "mv " + result1 + " " + continousBM + "results/" + serverName + "$" + versionNumber + "$noClient1.nt";
+    	String cmd = "mv " + result1 + " ../results/" + serverName + "$" + versionNumber + "$noClient1.nt";
 		
-        Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
+        Runtime.getRuntime().exec(cmd, null, iguanaPath);
         
-        cmd = "mv " + result2 + " " + continousBM + "results/" + serverName + "$" + versionNumber + "$noClient2.nt";
+        cmd = "mv " + result2 + " ../results/" + serverName + "$" + versionNumber + "$noClient2.nt";
 		
-        Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
+        Runtime.getRuntime().exec(cmd, null, iguanaPath);
         
-        cmd = "mv " + result3 + " " + continousBM + "results/" + serverName + "$" + versionNumber + "$noClient3.nt";
+        cmd = "mv " + result3 + " ../results/" + serverName + "$" + versionNumber + "$noClient3.nt";
 		
-        Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
+        Runtime.getRuntime().exec(cmd, null, iguanaPath);
         
-        cmd = "mv " + result4 + " " + continousBM + "results/" + serverName + "$" + versionNumber + "$noClient4.nt";
+        cmd = "mv " + result4 + " ../results/" + serverName + "$" + versionNumber + "$noClient4.nt";
 		
-        Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
+        Runtime.getRuntime().exec(cmd, null, iguanaPath);
         
-        cmd = "mv " + result5 + " " + continousBM + "results/" + serverName + "$" + versionNumber + "$noClient5.nt";
+        cmd = "mv " + result5 + " ../results/" + serverName + "$" + versionNumber + "$noClient5.nt";
 		
-        Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
+        Runtime.getRuntime().exec(cmd, null, iguanaPath);
     }
     
     protected static int runTripleStores()
