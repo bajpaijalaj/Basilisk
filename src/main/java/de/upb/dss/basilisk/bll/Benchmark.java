@@ -65,23 +65,23 @@ public class Benchmark {
     	String result5 = appProps.getProperty("result5");
     	String continousBM = appProps.getProperty("continousBM");
     	
-    	String cmd = "mv " + result1 + " " + continousBM + serverName + "$" + versionNumber + "$noClient1";
+    	String cmd = "mv " + result1 + " " + continousBM + "results/" + serverName + "$" + versionNumber + "$noClient1.nt";
 		
         Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
         
-        cmd = "mv " + result2 + " " + continousBM + serverName + "$" + versionNumber + "$noClient2";
+        cmd = "mv " + result2 + " " + continousBM + "results/" + serverName + "$" + versionNumber + "$noClient2.nt";
 		
         Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
         
-        cmd = "mv " + result3 + " " + continousBM + serverName + "$" + versionNumber + "$noClient3";
+        cmd = "mv " + result3 + " " + continousBM + "results/" + serverName + "$" + versionNumber + "$noClient3.nt";
 		
         Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
         
-        cmd = "mv " + result4 + " " + continousBM + serverName + "$" + versionNumber + "$noClient4";
+        cmd = "mv " + result4 + " " + continousBM + "results/" + serverName + "$" + versionNumber + "$noClient4.nt";
 		
         Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
         
-        cmd = "mv " + result5 + " " + continousBM + serverName + "$" + versionNumber + "$noClient5";
+        cmd = "mv " + result5 + " " + continousBM + "results/" + serverName + "$" + versionNumber + "$noClient5.nt";
 		
         Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
     }
