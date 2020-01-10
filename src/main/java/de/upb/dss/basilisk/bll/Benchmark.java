@@ -20,12 +20,13 @@ public class Benchmark {
 	static File iguanaPath;
 	static String logFilePath;
 	static String configPath;
+	static Properties appProps;
 	
 	static String serverName, port, testDataset, queryFile, versionNumber;
 	
     public static int runBenchmark(String argPort, String argServerName, String argTestDataSet, String argQueryFile, String argVersionNumber) throws IOException, InterruptedException 
     {
-    	Properties appProps = Basilisk.applicationProperties;
+    	appProps = Basilisk.applicationProperties;
 
     	dockerFile = new File(appProps.getProperty("dockerFile"));
     	bmWorkSpace = new File(appProps.getProperty("bmWorkSpace"));
@@ -48,12 +49,42 @@ public class Benchmark {
         //Run the triple stores
         runTripleStores();
         
-    	
+    	//Move the results to results folder and rename it.
+        renameResults();
       //Clear the docker, so that next benchmark can be run.
         clearDocker();
         return 0;
     }
     
+    protected static void renameResults() throws IOException
+    {
+    	String result1 = appProps.getProperty("result1");
+    	String result2 = appProps.getProperty("result2");
+    	String result3 = appProps.getProperty("result3");
+    	String result4 = appProps.getProperty("result4");
+    	String result5 = appProps.getProperty("result5");
+    	String continousBM = appProps.getProperty("continousBM");
+    	
+    	String cmd = "mv " + result1 + " " + continousBM + serverName + "$" + versionNumber + "$noClient1";
+		
+        Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
+        
+        cmd = "mv " + result2 + " " + continousBM + serverName + "$" + versionNumber + "$noClient2";
+		
+        Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
+        
+        cmd = "mv " + result3 + " " + continousBM + serverName + "$" + versionNumber + "$noClient3";
+		
+        Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
+        
+        cmd = "mv " + result4 + " " + continousBM + serverName + "$" + versionNumber + "$noClient4";
+		
+        Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
+        
+        cmd = "mv " + result5 + " " + continousBM + serverName + "$" + versionNumber + "$noClient5";
+		
+        Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
+    }
     
     protected static int runTripleStores()
     {
@@ -198,6 +229,33 @@ public class Benchmark {
                 {
                 	runIguana();
                 }
+                
+                
+                
+//                if(p.isAlive())
+//                {
+//                	logger.info(serverName + " server is successfully running.\n");
+//                    
+//                	runIguana();
+//                }
+//                else
+//                {
+//                	stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+//                	logger.info("Error/Warning of the command :\n");
+//                	System.err.println("Error/Warning of the command :\n");
+//                    while ((s = stdError.readLine()) != null)
+//                    {
+//                            err = err + "\n" + s;
+//                            System.err.println(s);
+//                    }
+//                    
+//                	System.out.println("Something went wrong while running the docker");
+//                    System.out.println("Exit code = " + exitCode);
+//                    System.out.println("Error message = \n" + err);
+//                    return 50;
+//                }
+
+                
 
                 System.out.println("closing std out file");
                 stdInput.close();
@@ -218,7 +276,7 @@ public class Benchmark {
         return 0;
     }
     
-    public static int runIguana() throws Exception
+    protected static int runIguana() throws Exception
     {
     	String s = "";
     	String log = "";
@@ -339,7 +397,10 @@ public class Benchmark {
             out.flush();
             
             //Dump that configuration into a configuration file called benchmark.config
-                
+            String fileSeparator = System.getProperty("file.separator");
+    
+    
+            System.out.println("Config is : " + configPath);
             File configFile = new File(configPath);
                 
             if(configFile.exists())
