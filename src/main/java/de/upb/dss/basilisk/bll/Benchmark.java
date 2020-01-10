@@ -22,7 +22,7 @@ public class Benchmark {
 	static String configPath;
 	static Properties appProps;
 	
-	static String serverName, port, testDataset, queryFile, versionNumber;
+	static String serverName, port, testDataset, queryFile, versionNumber, testDatasetPath;
 	
     public static int runBenchmark(String argPort, String argServerName, String argTestDataSet, String argQueryFile, String argVersionNumber) throws IOException, InterruptedException 
     {
@@ -33,7 +33,7 @@ public class Benchmark {
     	iguanaPath = new File(appProps.getProperty("iguanaPath"));
     	logFilePath = appProps.getProperty("logFilePath");
     	configPath = appProps.getProperty("configPath");
-    	
+    	testDatasetPath = appProps.getProperty("testDatasetPath");
     	
     	//Set all the required info for running the benchmark.
     	serverName = argServerName;
@@ -179,7 +179,9 @@ public class Benchmark {
                 {
                 	command = "docker run -p "
                             + port + ":" + port
-                            + " -v /home/dss/continuousBM/testDataSet:/datasets --name "
+                            + " -v "
+                            + testDatasetPath 
+                            + ":/datasets --name "
                             + serverName + "_server cbm:" + serverName
                             + " -f /datasets/"
                             + testDataset + " -p "
@@ -228,34 +230,7 @@ public class Benchmark {
                 else
                 {
                 	runIguana();
-                }
-                
-                
-                
-//                if(p.isAlive())
-//                {
-//                	logger.info(serverName + " server is successfully running.\n");
-//                    
-//                	runIguana();
-//                }
-//                else
-//                {
-//                	stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-//                	logger.info("Error/Warning of the command :\n");
-//                	System.err.println("Error/Warning of the command :\n");
-//                    while ((s = stdError.readLine()) != null)
-//                    {
-//                            err = err + "\n" + s;
-//                            System.err.println(s);
-//                    }
-//                    
-//                	System.out.println("Something went wrong while running the docker");
-//                    System.out.println("Exit code = " + exitCode);
-//                    System.out.println("Error message = \n" + err);
-//                    return 50;
-//                }
-
-                
+                }      
 
                 System.out.println("closing std out file");
                 stdInput.close();
