@@ -36,9 +36,21 @@ function move(temp) {
     $("#other_stats").slideDown("medium");
   }
 }
-
+var dataset_available=[];
+var connectionstring="http://131.234.28.165:3030";
+    var datastore=""; //nodefault
+    var postconnection="/sparql?query=";
+    var queryclient="SELECT  ?client "+
+                    "WHERE {"+
+                    "?query <http://iguana-benchmark.eu/properties/noOfWorkers> ?client ."+
+                    "}";
+    var queryavgqps="SELECT AVG( ?qps )"+
+                    "WHERE {"+
+                    "?query <http://iguana-benchmark.eu/properties/queriesPerSecond> ?qps ."+
+                    "}"; 
+var counter;
 function parseData(createGraph) {
-	Papa.parse("http://127.0.0.1:3000/expected_csv.csv", {
+	Papa.parse("http://131.234.28.165:3000/expected_csv.csv", {
 		download: true,
 		complete: function(results) {
 			createGraph(results.data);
@@ -390,10 +402,51 @@ var chart3 = c3.generate({
 });
 
 }
-parseData(createGraph);
+function downloadCsv(){  
+  var datasetsstring="http://131.234.28.165:3030/$/datasets";
+  //window.open('../expected_csv.csv', 'Download');
+  axios({
+    method: 'get',
+    url: datasetsstring})
+  .then(res => datasets(res))
+  .catch(err => console.log(err));
+  }
 
-function downloadCsv()
-{
-  window.open('../expected_csv.csv', 'Download');
+  function datasets(datasetstring)
+  {
+    for(var i=0; i<=datasetstring.data.datasets.length-1; i++){
+      dataset_available[i]= datasetstring.data.datasets[i]["ds.name"];
+    }
 
-}
+  for(var i=0;i<dataset_available.length;i++)
+  {
+    counter=i;
+    var querystringforclient=connectionstring+dataset_available[i]+postconnection+encodeURI(queryclient);
+    //console.log(querystringforclient);
+    axios({
+      method: 'get',
+      url: querystringforclient})
+    .then(res => showResult(res))
+    .catch(err => console.log(err));
+  }
+    
+  }
+  function showResult(clients){
+      console.log(clients.data.results.bindings[0].client.value);
+      
+
+      var querystringforqps=connectionstring+dataset_available[counter]+postconnection+encodeURI(queryavgqps);
+      axios({
+        method: 'get',
+        url: querystringforqps})
+      .then(res => anotherresult(res))
+      .catch(err => console.log(err));
+  }
+  function anotherresult(res)
+  {
+    console.log(res.data.results.bindings[0][".1"].value);
+  }
+  
+
+
+//parseData(createGraph);
