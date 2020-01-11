@@ -68,19 +68,19 @@ public class Benchmark
 		
 		Runtime.getRuntime().exec(cmd, null, iguanaPath);
 		
-		cmd = "mv " + result2 + " ../results/" + serverName + "_" + versionNumber + "_noClient2.nt";
+		cmd = "mv " + result2 + " ../results/" + serverName + "_" + versionNumber + "_noClient4.nt";
 		
 		Runtime.getRuntime().exec(cmd, null, iguanaPath);
 		
-		cmd = "mv " + result3 + " ../results/" + serverName + "_" + versionNumber + "_noClient3.nt";
+		cmd = "mv " + result3 + " ../results/" + serverName + "_" + versionNumber + "_noClient8.nt";
 		
 		Runtime.getRuntime().exec(cmd, null, iguanaPath);
 		
-		cmd = "mv " + result4 + " ../results/" + serverName + "_" + versionNumber + "_noClient4.nt";
+		cmd = "mv " + result4 + " ../results/" + serverName + "_" + versionNumber + "_noClient16.nt";
 		
 		Runtime.getRuntime().exec(cmd, null, iguanaPath);
 		
-		cmd = "mv " + result5 + " ../results/" + serverName + "_" + versionNumber + "_noClient5.nt";
+		cmd = "mv " + result5 + " ../results/" + serverName + "_" + versionNumber + "_noClient32.nt";
 		
 		Runtime.getRuntime().exec(cmd, null, iguanaPath);
 	}
@@ -197,10 +197,11 @@ public class Benchmark
 				TimeUnit.SECONDS.sleep(10);
 				
 				//If the process is alive run Iguana benchmarl otherwise could not run the docker image.
-				//Command to check whether the respective docker image is running or not, to avoid the infinite loop.
-				//docker images -q cbm:${serverName}
-				cmd = "docker images -q cbm:"
-						+ serverName;
+				//Command to check whether the respective docker container is running or not, to avoid the infinite loop.
+				//docker inspect -f '{{.State.Status}}' ${serverName}_server
+				cmd = "docker inspect -f '{{.State.Status}}' "
+						+ serverName
+						+ "_server";
 				
 				//Run the command.
 				p = Runtime.getRuntime().exec(cmd, null, bmWorkSpace);
@@ -215,12 +216,7 @@ public class Benchmark
 					dockerId = s;
 				}
 				
-				if(dockerId == "")
-				{
-					System.out.println("Empty not existed docker container");
-					return -1;
-				}
-				else
+				if(dockerId == "running")
 				{
 					int iguanaExitCode = runIguana();
 					stdInput.close();
@@ -228,6 +224,12 @@ public class Benchmark
 					
 					if(iguanaExitCode != 0)
 						return iguanaExitCode;
+				}
+				else
+				{
+					System.out.println("Empty!! not existed docker container");
+					logger.info("Empty!! not existed docker container\n");
+					return -1;
 				}
 			}
 			else
