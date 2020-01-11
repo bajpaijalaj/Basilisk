@@ -216,7 +216,7 @@ public class Benchmark
 					dockerId = s;
 				}
 				
-				if(dockerId == "running")
+				if(dockerId.contains("running"))
 				{
 					int iguanaExitCode = runIguana();
 					stdInput.close();
