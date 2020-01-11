@@ -13,7 +13,8 @@ import freemarker.template.Template;
 import freemarker.template.Version;
 
 
-public class Benchmark {
+public class Benchmark 
+{
 	static Logger logger;
 	static File dockerFile;
 	static File bmWorkSpace;
@@ -24,9 +25,9 @@ public class Benchmark {
 	
 	static String serverName, port, testDataset, queryFile, versionNumber, testDatasetPath;
 	
-    public static int runBenchmark(String argPort, String argServerName, String argTestDataSet, String argQueryFile, String argVersionNumber) throws IOException, InterruptedException 
+	public static int runBenchmark(String argPort, String argServerName, String argTestDataSet, String argQueryFile, String argVersionNumber) throws IOException, InterruptedException 
     {
-    	appProps = Basilisk.applicationProperties;
+		appProps = Basilisk.applicationProperties;
 
     	dockerFile = new File(appProps.getProperty("dockerFile"));
     	bmWorkSpace = new File(appProps.getProperty("bmWorkSpace"));
@@ -47,14 +48,14 @@ public class Benchmark {
         
         
         //Run the triple stores
-        runTripleStores();
+        int exitCode = runTripleStores();
         
     	//Move the results to results folder and rename it.
         renameResults();
         
       //Clear the docker, so that next benchmark can be run.
         clearDocker();
-        return 0;
+        return exitCode;
     }
     
     protected static void renameResults() throws IOException
@@ -124,8 +125,8 @@ public class Benchmark {
                 logger.info("Output of the command is :\n");
                 while ((s = stdInput.readLine()) != null)
                 {
-                        log = log + "\n" + s;
-                        System.out.println(s);
+                	log = log + "\n" + s;
+                	System.out.println(s);
                 }
 
                 logger.info(log);  //Log the output
@@ -135,8 +136,8 @@ public class Benchmark {
                 logger.info("Error/Warning of the command :\n");
                 while ((s = stdError.readLine()) != null)
                 {
-                        err = err + "\n" + s;
-                        System.err.println(s);
+                	err = err + "\n" + s;
+                	System.err.println(s);
                 }
 
                 logger.info(log);  //Log the error/warning
@@ -147,10 +148,10 @@ public class Benchmark {
                 
                 if(exitCode != 0)
                 {
-                        System.out.println("Something went wrong while building the docker");
-                        System.out.println("Exit code = " + exitCode);
-                        System.out.println("Error message = \n" + err);
-                        return exitCode;
+                	System.out.println("Something went wrong while building the docker");
+                	System.out.println("Exit code = " + exitCode);
+                	System.out.println("Error message = \n" + err);
+                	return exitCode;
                 }
                 
                 
@@ -240,7 +241,13 @@ public class Benchmark {
                 System.out.println("closed std err file");
                 
                 
-          }
+        	}
+        	else
+        	{
+        		logger.info("Docker file does not exist. Please check\n");
+        		System.out.println("Docker file does not exist. Please check");
+        		return -151;
+        	}
         }
         catch (Exception e)
         {
