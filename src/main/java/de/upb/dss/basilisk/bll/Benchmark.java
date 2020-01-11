@@ -13,7 +13,8 @@ import freemarker.template.Template;
 import freemarker.template.Version;
 
 
-public class Benchmark {
+public class Benchmark 
+{
 	static Logger logger;
 	static File dockerFile;
 	static File bmWorkSpace;
@@ -47,14 +48,14 @@ public class Benchmark {
         
         
         //Run the triple stores
-        runTripleStores();
+        int exitCode = runTripleStores();
         
     	//Move the results to results folder and rename it.
         renameResults();
         
       //Clear the docker, so that next benchmark can be run.
         clearDocker();
-        return 0;
+        return exitCode;
     }
     
     protected static void renameResults() throws IOException
