@@ -234,7 +234,7 @@ public class Benchmark
 			{
 				logger.info("Dockerfile does not exist\n");
 				System.out.println("Dockerfile does not exist");
-				return 151;
+				return -151;
 			}
 		}
 		catch (Exception e)
