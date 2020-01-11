@@ -148,10 +148,17 @@ public class Benchmark
                 
                 if(exitCode != 0)
                 {
+<<<<<<< HEAD
                 	System.out.println("Something went wrong while building the docker");
                 	System.out.println("Exit code = " + exitCode);
                 	System.out.println("Error message = \n" + err);
                 	return exitCode;
+=======
+                     System.out.println("Something went wrong while building the docker");
+                     System.out.println("Exit code = " + exitCode);
+                     System.out.println("Error message = \n" + err);
+                     return exitCode;
+>>>>>>> dev_ranjith
                 }
                 
                 
@@ -244,9 +251,15 @@ public class Benchmark
         	}
         	else
         	{
+<<<<<<< HEAD
         		logger.info("Docker file does not exist. Please check\n");
         		System.out.println("Docker file does not exist. Please check");
         		return -151;
+=======
+        		logger.info("Dockerfile does not exist\n");
+        		System.out.println("Dockerfile does not exist");
+        		return 151;
+>>>>>>> dev_ranjith
         	}
         }
         catch (Exception e)
