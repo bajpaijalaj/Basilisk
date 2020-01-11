@@ -25,38 +25,36 @@ public class Benchmark
 	
 	static String serverName, port, testDataset, queryFile, versionNumber, testDatasetPath;
 	
-    public static int runBenchmark(String argPort, String argServerName, String argTestDataSet, String argQueryFile, String argVersionNumber) throws IOException, InterruptedException 
-    {
-    	appProps = Basilisk.applicationProperties;
+	public static int runBenchmark(String argPort, String argServerName, String argTestDataSet, String argQueryFile, String argVersionNumber) throws IOException, InterruptedException 
+	{
+		appProps = Basilisk.applicationProperties;
+		dockerFile = new File(appProps.getProperty("dockerFile"));
+		bmWorkSpace = new File(appProps.getProperty("bmWorkSpace"));
+		iguanaPath = new File(appProps.getProperty("iguanaPath"));
+		logFilePath = appProps.getProperty("logFilePath");
+		configPath = appProps.getProperty("configPath");
+		testDatasetPath = appProps.getProperty("testDatasetPath");
+		
+		//Set all the required info for running the benchmark.
+		serverName = argServerName;
+		port = argPort;
+		testDataset = argTestDataSet;
+		queryFile = argQueryFile;
+		versionNumber = argVersionNumber;
+		
+		//Clear the docker, so that next benchmark can be run.
+		clearDocker();
+		
+		//Run the triple stores
+		int exitCode = runTripleStores();
+		
+		//Move the results to results folder and rename it.
+		renameResults();
 
-    	dockerFile = new File(appProps.getProperty("dockerFile"));
-    	bmWorkSpace = new File(appProps.getProperty("bmWorkSpace"));
-    	iguanaPath = new File(appProps.getProperty("iguanaPath"));
-    	logFilePath = appProps.getProperty("logFilePath");
-    	configPath = appProps.getProperty("configPath");
-    	testDatasetPath = appProps.getProperty("testDatasetPath");
-    	
-    	//Set all the required info for running the benchmark.
-    	serverName = argServerName;
-        port = argPort;
-        testDataset = argTestDataSet;
-        queryFile = argQueryFile;
-        versionNumber = argVersionNumber;
-        
-        //Clear the docker, so that next benchmark can be run.
-        clearDocker();
-        
-        
-        //Run the triple stores
-        int exitCode = runTripleStores();
-        
-    	//Move the results to results folder and rename it.
-        renameResults();
-        
-        //Clear the docker, so that next benchmark can be run.
-        clearDocker();
-        return exitCode;
-    }
+		//Clear the docker, so that next benchmark can be run.
+		clearDocker();
+		return exitCode;
+	}
     
     protected static void renameResults() throws IOException
     {
