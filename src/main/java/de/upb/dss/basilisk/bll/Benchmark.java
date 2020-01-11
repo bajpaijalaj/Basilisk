@@ -53,7 +53,7 @@ public class Benchmark
     	//Move the results to results folder and rename it.
         renameResults();
         
-      //Clear the docker, so that next benchmark can be run.
+        //Clear the docker, so that next benchmark can be run.
         clearDocker();
         return exitCode;
     }
