@@ -48,6 +48,10 @@ var connectionstring="http://131.234.28.165:3030";
                     "WHERE {"+
                     "?query <http://iguana-benchmark.eu/properties/queriesPerSecond> ?qps ."+
                     "}"; 
+    var queryVersionNo="SELECT ?name "+
+                    "{"+
+                    "?query <http://iguana-benchmark.eu/properties/connection> ?name ."+
+                    "}"; 
 var counter;
 function parseData(createGraph) {
 	Papa.parse("http://131.234.28.165:3000/expected_csv.csv", {
@@ -402,6 +406,16 @@ var chart3 = c3.generate({
 });
 
 }
+
+//Global variables
+var arr = [];
+var recordIndex = -1;
+var version = "";
+var versionCheck = false;
+var versionIndex;
+var noOfClients;
+
+
 function downloadCsv(){  
   var datasetsstring="http://131.234.28.165:3030/$/datasets";
   //window.open('../expected_csv.csv', 'Download');
@@ -414,10 +428,12 @@ function downloadCsv(){
 
   function datasets(datasetstring)
   {
-    for(var i=0; i<=datasetstring.data.datasets.length-1; i++){
+    for(var i=0; i<=datasetstring.data.datasets.length-1; i++)
+    {
       dataset_available[i]= datasetstring.data.datasets[i]["ds.name"];
     }
 
+    getResults();
 
   function getResults()
   {
@@ -427,8 +443,9 @@ function downloadCsv(){
         if (i<dataset_available.length) {
           counter = i;
           var querystringforclient=connectionstring+dataset_available[i]+postconnection+encodeURI(queryclient);
+          runQueries(querystringforclient, i);
+          
           i++;
-          queryForClient(querystringforclient);
           setTimeout(nextStep, 200); 
         }
         else {
@@ -437,35 +454,95 @@ function downloadCsv(){
     }
     nextStep();
     return deferred.promise();
-  }
-
-getResults();
+  } 
 
 
-    async function queryForClient(URL){
+    async function runQueries(URL, datasetNo){
+
+      var querystringforVersion=connectionstring+dataset_available[datasetNo]+postconnection+encodeURI(queryVersionNo);
+      versionQueryResponse = await axios({
+        method: 'get',
+        url: querystringforVersion})
+      .then(res => {return res})
+      .catch(err => console.log(err));
+
+      getVersion(versionQueryResponse);
+
       response = await axios({
         method: 'get',
         url: URL})
       .then(res => {return res})
       .catch(err => console.log(err));
 
-      showResult(response);
+      getClient(response);
     }
       
     }
-    async function showResult(clients){
-        console.log(clients.data.results.bindings[0].client.value);
+
+    function getVersion(res)
+    {
+      resultIs = res.data.results.bindings[0]["name"].value;
+      version = resultIs.substring(resultIs.lastIndexOf('/') + 1)
+      for(var i=0; i<arr.length; i++){
+        if(arr[i][0] == version){    //check if version already exists in 2D array
+          versionCheck = true;
+          versionIndex = i;
+          return;
+        } 
+      }
+      arr.push([]); //for a new version, add new row in the 2D array
+      recordIndex=recordIndex+1
+      arr[recordIndex][0] = version;
+      arr[recordIndex][1] = version.substring(0, version.lastIndexOf('$'));
+      versionCheck = true;
+      versionIndex = i;
+    }
+
+    async function getClient(clients){
+        noOfClients = clients.data.results.bindings[0].client.value;
   
         var querystringforqps=connectionstring+dataset_available[counter]+postconnection+encodeURI(queryavgqps);
+        
         axios({
           method: 'get',
           url: querystringforqps})
-        .then(res => anotherresult(res))
+        .then(res => getQPS(res))
         .catch(err => console.log(err));
     }
-    function anotherresult(res)
+
+    function getQPS(res) //get QPS and save it at the correct index in 2D array
     {
-      console.log(res.data.results.bindings[0][".1"].value);
+      AQPS = res.data.results.bindings[0][".1"].value;
+      console.log("version, arrayIndex of version, No of clients, AQPS:", version, versionIndex, noOfClients, AQPS)
+      switch (noOfClients) {
+        case "1":
+          arr[versionIndex][2] = AQPS;
+          break;
+        case "4":
+          arr[versionIndex][3] = AQPS
+          break;
+        case "8":
+          arr[versionIndex][4] = AQPS
+          break;
+        case "16":
+          arr[versionIndex][5] = AQPS
+          break;
+        case "32":
+          arr[versionIndex][6] = AQPS
+          break;
+      }
+
+      
     }
+
+    function get2dArray() {
+      setTimeout(function(){ 
+        console.log("array: ",arr);
+        return arr;
+      }, 5000);
+    }
+
+    get2dArray();
+
 
 //parseData(createGraph);
