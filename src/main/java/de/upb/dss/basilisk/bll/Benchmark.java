@@ -124,8 +124,8 @@ public class Benchmark {
                 logger.info("Output of the command is :\n");
                 while ((s = stdInput.readLine()) != null)
                 {
-                        log = log + "\n" + s;
-                        System.out.println(s);
+                	log = log + "\n" + s;
+                	System.out.println(s);
                 }
 
                 logger.info(log);  //Log the output
@@ -135,8 +135,8 @@ public class Benchmark {
                 logger.info("Error/Warning of the command :\n");
                 while ((s = stdError.readLine()) != null)
                 {
-                        err = err + "\n" + s;
-                        System.err.println(s);
+                	err = err + "\n" + s;
+                	System.err.println(s);
                 }
 
                 logger.info(log);  //Log the error/warning
@@ -147,10 +147,10 @@ public class Benchmark {
                 
                 if(exitCode != 0)
                 {
-                        System.out.println("Something went wrong while building the docker");
-                        System.out.println("Exit code = " + exitCode);
-                        System.out.println("Error message = \n" + err);
-                        return exitCode;
+                     System.out.println("Something went wrong while building the docker");
+                     System.out.println("Exit code = " + exitCode);
+                     System.out.println("Error message = \n" + err);
+                     return exitCode;
                 }
                 
                 
@@ -240,7 +240,13 @@ public class Benchmark {
                 System.out.println("closed std err file");
                 
                 
-          }
+        	}
+        	else
+        	{
+        		logger.info("Dockerfile does not exist\n");
+        		System.out.println("Dockerfile does not exist");
+        		return 151;
+        	}
         }
         catch (Exception e)
         {
