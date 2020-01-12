@@ -2,200 +2,34 @@
 <html>
 
 <head>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <link href="css/c3.css" rel="stylesheet">
+  <script src="js/c3.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+  <script src="js/papaparse.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script type="text/javascript">
-    google.charts.load('current', { 'packages': ['bar', 'corechart', 'line'] });
-    google.charts.setOnLoadCallback(drawChart);
-
-    $(document).ready(function () {
-      $("#close").click(function () {
-        $("#menuId").slideUp("medium");
-        $("#close").hide();
-        $("#open").show();
-      });
-      $("#open").click(function () {
-        $("#menuId").slideDown("slow");
-        $("#open").hide();
-        $("#close").show();
-      });
-    });
-
-    function move(temp) {
-      if (temp == 'bar') {
-        $("#boxplot_chart").slideUp("medium");
-        $("#line_chart").slideUp("medium");
-        $("#other_stats").slideUp("medium");
-        $("#bar_chart").slideDown("medium");
-      }
-      else if (temp == 'box') {
-        $("#bar_chart").slideUp("medium");
-        $("#line_chart").slideUp("medium");
-        $("#other_stats").slideUp("medium");
-        $("#boxplot_chart").slideDown("medium");
-      }
-      else if (temp == 'line') {
-        $("#bar_chart").slideUp("medium");
-        $("#boxplot_chart").slideUp("medium");
-        $("#other_stats").slideUp("medium");
-        $("#line_chart").slideDown("medium");
-      }
-      else if (temp == 'other') {
-        $("#bar_chart").slideUp("medium");
-        $("#boxplot_chart").slideUp("medium");
-        $("#line_chart").slideUp("medium");
-        $("#other_stats").slideDown("medium");
-      }
-    }
-
-    function drawChart() {
-      var data = google.visualization.arrayToDataTable([
-        ['No. of Clients', 'T', 'F', 'V'],
-        ['1', 1000, 500, 300],
-        ['4', 1200, 450, 450],
-        ['8', 600, 1000, 400],
-        ['16', 1000, 570, 340]
-      ]);
-      var bar_chart_options = {
-        chart: {
-          title: 'Performance',
-          subtitle: 'Tentris, Fuseki, and Virtuoso'          
-        },
-        bars: 'vertical',
-        legend: { position: 'none' },
-        hAxis: { format: 'decimal' },
-        height: 450,
-        colors: ['#1b9e76', '#d95f01', '#7570b2']
-      };
-      
-      var line_data = new google.visualization.DataTable();
-      line_data.addColumn('number', 'Day');
-      line_data.addColumn('number', 'T');
-      line_data.addColumn('number', 'F');
-      line_data.addColumn('number', 'V');
-      line_data.addRows([[1,  57.8, 60.8, 40.8],[2,  40.1, 61.1, 12.4],[3,  15.2, 60, 14.7],
-        [4,  21.8, 13.9, 13.1],[5,  10.0, 27.7, 11.2],[6,   9.9, 12.4,  7.1],
-        [7,   4.5, 42.2,  19.5],[8,  12.4, 42.1, 11.8],[9,  26.3, 52.2, 21.8],
-        [10, 17.2, 34.2, 31.7],[11,  7.2,  4.2,  8.6],[12,  7.1,  22.8,  6.4],
-        [13,  14.6,  9.2,  7.1],[14,  6.2,  15.7,  16.2]]);
-
-      var line_options = {
-        chart: {
-          title: 'QpS'
-        },
-        legend: { position: 'none' },
-        width: 900,
-        height: 500
-      };
-
-      var data_box = [
-        ['Tentris', 100, 90, 110, 85, 96, 104, 120],
-        ['Fuseki', 120, 95, 130, 90, 113, 124, 140],
-        ['Virtuoso', 130, 105, 140, 100, 117, 133, 139]
-      ];
-
-      var dataTable = new google.visualization.DataTable();
-      dataTable.addColumn('string', 'x');
-      dataTable.addColumn('number', 'series0');
-      dataTable.addColumn('number', 'series1');
-      dataTable.addColumn('number', 'series2');
-      dataTable.addColumn('number', 'series3');
-      dataTable.addColumn('number', 'series4');
-      dataTable.addColumn('number', 'series5');
-      dataTable.addColumn('number', 'series6');
-      dataTable.addColumn({ id: 'max', type: 'number', role: 'interval' });
-      dataTable.addColumn({ id: 'min', type: 'number', role: 'interval' });
-      dataTable.addColumn({ id: 'firstQuartile', type: 'number', role: 'interval' });
-      dataTable.addColumn({ id: 'median', type: 'number', role: 'interval' });
-      dataTable.addColumn({ id: 'thirdQuartile', type: 'number', role: 'interval' });
-      dataTable.addRows(getBoxPlotValues(data_box));
-      function getBoxPlotValues(array) {
-        for (var i = 0; i < array.length; i++) {
-          var arr = array[i].slice(1).sort(function (a, b) {
-            return a - b;
-          });
-          var max = arr[arr.length - 1];
-          var min = arr[0];
-          var median = getMedian(arr);
-          var firstQuartile = getMedian(arr.slice(0, 4));
-          var thirdQuartile = getMedian(arr.slice(3));
-          array[i][8] = max;
-          array[i][9] = min
-          array[i][10] = firstQuartile;
-          array[i][11] = median;
-          array[i][12] = thirdQuartile;
-        }
-        return array;
-      }
-
-      function getMedian(array) {
-        var length = array.length;
-        if (length % 2 === 0) {
-          var midUpper = length / 2;
-          var midLower = midUpper - 1;
-          return (array[midUpper] + array[midLower]) / 2;
-        } else {
-          return array[Math.floor(length / 2)];
-        }
-      }
-
-      var boxPlot_options = {
-        title: '',
-        height: 500,
-        legend: { position: 'none' },
-        hAxis: {
-          gridlines: { color: '#fff' }
-        },
-        lineWidth: 0,
-        series: [{ 'color': '#D3362D' }],
-        intervals: {
-          barWidth: 1,
-          boxWidth: 1,
-          lineWidth: 2,
-          style: 'boxes'
-        },
-        interval: {
-          max: {
-            style: 'bars',
-            fillOpacity: 1,
-            color: '#777'
-          },
-          min: {
-            style: 'bars',
-            fillOpacity: 1,
-            color: '#777'
-          }
-        }
-      };
-
-      var bar_chart = new google.charts.Bar(document.getElementById('bar_chart'));
-      bar_chart.draw(data, google.charts.Bar.convertOptions(bar_chart_options));
-
-      var boxPlot_chart = new google.visualization.LineChart(document.getElementById('boxplot_chart'));
-      boxPlot_chart.draw(dataTable, boxPlot_options);
-
-      var line_chart = new google.charts.Line(document.getElementById('line_chart'));
-      line_chart.draw(line_data, google.charts.Line.convertOptions(line_options));
-    }
-  </script>
+  <script src="js/chartsscript.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="js/availableversion.js"></script>
   <style>
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       color: white;
     }
-
     .menu {
       position: -webkit-sticky;
       position: sticky;
       top: 0;
-      background-color: #f3b72e;
+      padding: 15px 15px 0px 15px;
+      background-color: #001030;
       font-size: 20px;
       display: grid;
       grid-template-columns: 33.33% 33.33% 33.33%;
       z-index: 1;
     }
-
     .content {
       display: grid;
       grid-template-columns: auto;
@@ -203,13 +37,11 @@
       background-color: white;
       padding: 10px;
     }
-
     .content>div {
       background-color: rgba(255, 255, 255, 0.8);
       text-align: center;
       font-size: 30px;
     }
-
     .drop,
     .sub,
     .clr,
@@ -221,37 +53,34 @@
       background-color: rgb(247, 222, 169);
       color: black;
     }
-
     .dropdown {
       position: relative;
       display: inline-block;
     }
-
     .dropdown-content {
       display: none;
       position: absolute;
-      background-color: rgb(250, 241, 220);
+      background-color: white;
+      border-radius: 5px;
+      border: 1px solid white;
       min-width: 160px;
       box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
       z-index: 1;
       padding: 5px 5px 5px 5px;
       color: black;
     }
-
     .dropdown-content input {
       color: black;
       padding: 5px 5px 5px 5px;
       text-decoration: none;
       display: block-inline;
     }
-
     .dropdown:hover .dropdown-content {
       display: block;
     }
-
     #close,
     #open {
-      position: absolute;
+      position: fixed;
       right: 0px;
       top: 0px;
       z-index: 10;
@@ -262,84 +91,79 @@
 </head>
 
 <body>
-  <span id="close">[Collapse]</span>
-  <span id="open" hidden>[Expand]</span>
+  <span class="btn btn-outline-light btn-sm" style="background-color: #15568f; color: white" id="open">Expand</span>
+  <span class="btn btn-primary btn-sm" id="close" style="background-color: #fff">Collapse</span>
+  
   <div class="menu" id="menuId">
-    <div class="menu-1">
+    <div class="logo" style="width: 60px;"><img src="Basilisk_Logo_ShivamBahedia.png" height="200" width="200" /></div>
+    <div class="menu-1" id="stores">
       <form>
         <table style="padding: 10px 10px 10px 10px;">
           <tr>
             <td>Tentris</td>
             <td>
-              <div class="dropdown">
-                <label class="drop">Select Versions</label>
-                <div class="dropdown-content">
-                  <input type="checkbox" name="store" value="bar"> Version 1</input><br>
-                  <input type="checkbox" name="store" value="bar"> Version 2</input><br>
-                  <input type="checkbox" name="store" value="bar"> Version 3</input><br>
-                </div>
-              </div>
+              <select id="TentrisVersion">
+                <option selected="selected" value="" disabled>select version</option>
+              </select>
             </td>
           </tr>
           <tr>
             <td>Fuseki</td>
             <td>
-              <div class="dropdown"><label class="drop">Select Versions</label>
-                <div class="dropdown-content">
-                  <input type="checkbox" name="store" value="bar"> Version 1</input><br>
-                  <input type="checkbox" name="store" value="bar"> Version 2</input><br>
-                  <input type="checkbox" name="store" value="bar"> Version 3</input><br>
-                </div>
-              </div>
+              <select id="FusekiVersion">
+                <option selected="selected" value="" disabled>select version</option>
+              </select>
             </td>
           </tr>
           <tr>
             <td>Virtuoso</td>
             <td>
-              <div class="dropdown"><label class="drop">Select Versions</label>
-                <div class="dropdown-content">
-                  <input type="checkbox" name="store" value="bar"> Version 1</input><br>
-                  <input type="checkbox" name="store" value="bar"> Version 2</input><br>
-                  <input type="checkbox" name="store" value="bar"> Version 3</input><br>
-                </div>
-              </div>
+              <select id="VirtuosoVersion">
+                <option selected="selected" value="" disabled>select version</option>
+              </select>
             </td>
           </tr>
+          <td></td>
+
           <tr>
-            <td><label class="sub">Submit</label></td>
-            <td><label class="clr">Clear all</label></td>
+            
+            <td><label class="btn btn-light btn-sm" style="margin-left: 0px" onClick="displayGraph()">Submit</label></td>
+            <td><label class="btn btn-outline-light btn-sm" style="margin-left: 55px" onClick="clearGraph()">Clear all</label></td>
           </tr>
         </table>
       </form>
     </div>
-    <div class="logo"><img src="./dummy_logo.png" /></div>
+    
+    
     <div class="menu-2">
       <table style=" padding: 10px 10px 10px 10px;">
         <tr>
           <td>
             <form>
               <input class="rad" type="radio" value="bar" name="chart" onclick="move('bar')" checked> Bar chart<br>
-              <input class="rad" type="radio" value="box" name="chart" onclick="move('box')"> Boxplot chart<br>
+              <input class="rad" type="radio" value="box" name="chart" onclick="move('box')"> Area Chart<br>
               <input class="rad" type="radio" value="line" name="chart" onclick="move('line')"> Line chart<br>
-              <input class="rad" type="radio" value="other_stats" name="chart" onclick="move('other')"> Other stats<br>
             </form>
           </td>
         </tr>
         <tr>
-          <td>Download Results: &nbsp;<label class="down">RDF Format</label>&nbsp;&nbsp;<label class="down">CSV
-              Format</label>
+          <td>Download Results: &nbsp;
+              <label class="btn btn-sm btn-outline-light" onclick="downloadRdf()">RDF Format</label>
+              &nbsp;&nbsp;
+              <label class="btn btn-sm btn-outline-light" onclick="downloadCsv()">CSV Format</label>
           </td>
         </tr>
       </table>
     </div>
-
   </div>
   <div class="content" style="width: 97%;">
-    <div id="bar_chart" style="width: 100%;"></div>
-    <div id="boxplot_chart"></div>
-    <div id="line_chart"></div>
-    <div id="other_stats"></div>
+    <div id="bar_chart" style=" height: 100%;width: 100%;"></div>
+    <div class="line_chart" style="width: 100%; height: 100%; left: 0; top: 0; " id="boxplot_chart">
+    </div>
+    <div class="line_chart" id="line_chart">
+    </div>
   </div>
+  
 
 </body>
 
