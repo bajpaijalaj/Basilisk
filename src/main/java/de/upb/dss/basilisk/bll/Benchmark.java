@@ -189,6 +189,17 @@ public class Benchmark
 							+ " --name "
 							+ serverName + "_server cbm:" + serverName;
 				}
+				else if(serverName.toLowerCase().equals("fuseki"))
+				{
+					command = "docker run -p "
+							+ port + ":3030"
+							+ " -v "
+							+ testDatasetPath 
+							+ ":/staging --name "
+							+ serverName + "_server cbm:" + serverName
+							+ " --file /staging/"
+							+ testDataset + " /test";
+				}
 
 				//Run the command.
 				Runtime.getRuntime().exec(command, null, bmWorkSpace);
