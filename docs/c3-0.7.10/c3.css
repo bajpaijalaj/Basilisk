@@ -1,15 +1,5 @@
 /*-- Chart --*/
-.line_chart_col {
-  float: left;
-  width: 33%;
-  padding: 10px;
-  height: 300px; /* Should be removed. Only for demonstration */
-}
-.line_chart:after {
-  content: "";
-  display: table;
-  clear: both;
-}
+
 .c3 svg {
   font: 10px sans-serif;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);

@@ -36,6 +36,7 @@ function move(temp) {
     $("#other_stats").slideDown("medium");
   }
 }
+var noofclients=["1","4","8","16","32"];
 var dataset_available=[];
 var connectionstring="http://131.234.28.165:3030";
     var datastore=""; //nodefault
@@ -489,7 +490,6 @@ function downloadCsv(){
       recordIndex=recordIndex+1
       arr[recordIndex][0] = version;
       arr[recordIndex][1] = version.substring(0, version.lastIndexOf('$'));
-      console.log(arr[recordIndex][0]);
       versionCheck = true;
       versionIndex = i;
     }
@@ -544,9 +544,225 @@ function downloadCsv(){
         return arr;
       }, 5000);
 
-
     }
 
+    function displayGraph()
+    {
+      var e = document.getElementById("TentrisVersion");
+      var TentrisVersionSelected = e.options[e.selectedIndex].value;
+      if(TentrisVersionSelected=="")
+      {
+        
+        alert("please select version for Tentris");
+      }
+      TentrisVersionSelected="tentris$"+TentrisVersionSelected;
+      
+
+      var e = document.getElementById("FusekiVersion");
+      var FusekiVersionSelected = e.options[e.selectedIndex].value;
+      if(FusekiVersionSelected==null)
+      {
+        
+        alert("please select version for Fuseki");
+      }
+      FusekiVersionSelected="fuseki$"+FusekiVersionSelected;
+
+
+      var e = document.getElementById("VirtuosoVersion");
+      var VirtuosoVersionSelected = e.options[e.selectedIndex].value;
+      if(VirtuosoVersionSelected=="")
+      {
+        
+        alert("please select version for Virtuoso");
+      }
+      VirtuosoVersionSelected="virtuoso$"+VirtuosoVersionSelected;
+
+      var TentrisArrayNumber=0;
+      var VirtuosoArrayNumber=0;
+      var FusekiArrayNumber=null;
+      var triplestoreTentris=[];
+      var triplestoreFuseki=[];
+      var triplestoreVirtuso=[];
+
+      for(var i=0; i<arr.length; i++){
+        if(arr[i][0] == TentrisVersionSelected){
+          TentrisArrayNumber=i;
+          triplestoreTentris=arr[TentrisArrayNumber];
+          triplestoreTentris=triplestoreTentris.slice(1,7);
+        }else{
+        if(arr[i][0] == VirtuosoVersionSelected){
+          VirtuosoArrayNumber=i;
+          triplestoreVirtuso=arr[VirtuosoArrayNumber];
+          triplestoreVirtuso=triplestoreVirtuso.slice(1,7);
+
+        }else
+        if(arr[i][0] == FusekiVersionSelected){
+          FusekiArrayNumber=i;
+          triplestoreFuseki=arr[FusekiArrayNumber];
+          triplestoreFuseki=triplestoreFuseki.slice(1,7);
+        }
+      }
+      
+      }
+
+      console.log(FusekiArrayNumber+ "  "+ triplestoreFuseki);
+
+
+      console.log(triplestoreVirtuso);
+
+
+
+      generatebargraph(triplestoreTentris,triplestoreVirtuso,triplestoreFuseki);
+      generateareagraph(triplestoreTentris,triplestoreVirtuso,triplestoreFuseki);
+      generatelinegraph(triplestoreTentris,triplestoreVirtuso,triplestoreFuseki);
+
+    }
+    function generatebargraph(triplestoreTentris,triplestoreVirtuso,triplestoreFuseki)
+    {
+      
+
+      var bar_chart = c3.generate({
+        bindto: '#bar_chart',
+        data: {
+            columns: [
+                triplestoreTentris,
+                triplestoreVirtuso,
+                //triplestoreFuseki
+            ],
+            type: 'bar'
+        },
+        title: {
+          text: 'Performance'
+        },
+        size:{
+          height:530,
+          width:1300
+
+        },
+        axis: {
+          x: {
+            label: {
+            
+            text: 'Number of Clients',
+            position: 'outer-center'
+            },
+            type: 'category',
+            categories:  noofclients,
+          },
+          y: {
+            label: {
+              text: 'Average QPS per Client',
+              position: 'outer-middle'
+              }
+          }
+        },
+        bar: {
+            width: {
+                ratio: 0.5 // this makes bar width 50% of length between ticks
+            }
+            // or
+            //width: 100 // this makes bar width 100px
+        },
+        tooltip: {
+          format: {
+              title: function (d) { return "No of clients " + noofclients[d] },
+          }
+      }
+    });
+
+
+    }
+    function generateareagraph(triplestoreTentris,triplestoreVirtuso,triplestoreFuseki)
+    {
+      var areachart = c3.generate({
+        bindto:"#boxplot_chart",
+        data: {
+            columns: [
+              triplestoreTentris,
+              triplestoreVirtuso,
+              //triplestoreFuseki
+            ],
+            types: {
+              tentris: 'area',
+              //fuseki: 'area-spline',
+              virtuoso:'area-spline'
+                // 'line', 'spline', 'step', 'area', 'area-step' are also available to stack
+            },
+            groups: [['Tentris','Virtuoso']]
+        },
+        title: {
+          text: 'Performance'
+        },
+        size:{
+          height:530,
+          width:1300
+
+        },
+        axis: {
+          x: {
+            label: {
+            
+            text: 'Number of Clients',
+            position: 'outer-center'
+            },
+            type: 'category',
+            categories:  noofclients,
+          },
+          y: {
+            label: {
+              text: 'Average QPS per Client',
+              position: 'outer-middle'
+              }
+          }
+        },
+        tooltip: {
+          format: {
+              title: function (d) { return "No of clients " + noofclients[d] },
+          }
+      }
+      
+      });
+
+    }
+    function generatelinegraph(triplestoreTentris,triplestoreVirtuso,triplestoreFuseki)
+    {
+      var chart1 = c3.generate({
+        bindto: '#line_chart',
+        title: {
+          text: 'Line-Chart'
+        },
+        data: {
+            x: 'x',
+            columns: [
+                ['x', 1, 4, 8, 16, 32],
+                triplestoreTentris,
+                triplestoreVirtuso,
+                //triplestoreFuseki
+                
+            ]
+        },
+        size:{
+          height:530,
+          width:1300
+
+        },
+        axis: {
+          x: {
+            label: {
+            text: 'Number of Clients',
+            position: 'outer-center'
+            }
+          },
+          y: {
+            label: {
+              text: 'Average QPS',
+              position: 'outer-middle'
+              }
+          }
+        }
+      });
+
+    }
 
     get2dArray();
 
