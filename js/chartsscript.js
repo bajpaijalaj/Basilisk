@@ -632,7 +632,7 @@ function downloadCsv(){
             type: 'bar'
         },
         title: {
-          text: 'Performance'
+          text: 'Bar-Chart'
         },
         size:{
           height:530,
@@ -691,7 +691,7 @@ function downloadCsv(){
             groups: [['Tentris','Virtuoso']]
         },
         title: {
-          text: 'Performance'
+          text: 'Area-Chart'
         },
         size:{
           height:530,

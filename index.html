@@ -2,17 +2,17 @@
 <html>
 
 <head>
-  <link href="c3-0.7.10/c3.css" rel="stylesheet">
-  <script src="c3-0.7.10/c3.js"></script>
+  <link href="css/c3.css" rel="stylesheet">
+  <script src="js/c3.js"></script>
   <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
-  <script src="papaparse.min.js"></script>
+  <script src="js/papaparse.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="chartsscript.js"></script>
+  <script src="js/chartsscript.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-<script src="availableversion.js"></script>
+<script src="js/availableversion.js"></script>
   <style>
     body {
       margin: 0;
@@ -95,7 +95,7 @@
   <span class="btn btn-primary btn-sm" id="close" style="background-color: #fff">Collapse</span>
   
   <div class="menu" id="menuId">
-    <div class="logo" style="width: 60px;"><img src="./Basilisk_Logo_ShivamBahedia.png" height="200" width="200" /></div>
+    <div class="logo" style="width: 60px;"><img src="Basilisk_Logo_ShivamBahedia.png" height="200" width="200" /></div>
     <div class="menu-1" id="stores">
       <form>
         <table style="padding: 10px 10px 10px 10px;">
@@ -143,7 +143,6 @@
               <input class="rad" type="radio" value="bar" name="chart" onclick="move('bar')" checked> Bar chart<br>
               <input class="rad" type="radio" value="box" name="chart" onclick="move('box')"> Area Chart<br>
               <input class="rad" type="radio" value="line" name="chart" onclick="move('line')"> Line chart<br>
-              <input class="rad" type="radio" value="other_stats" name="chart" onclick="move('other')"> Other stats<br>
             </form>
           </td>
         </tr>
@@ -156,7 +155,6 @@
         </tr>
       </table>
     </div>
-    
   </div>
   <div class="content" style="width: 97%;">
     <div id="bar_chart" style=" height: 100%;width: 100%;"></div>
@@ -164,7 +162,6 @@
     </div>
     <div class="line_chart" id="line_chart">
     </div>
-    <div id="other_stats"></div>
   </div>
   
 
