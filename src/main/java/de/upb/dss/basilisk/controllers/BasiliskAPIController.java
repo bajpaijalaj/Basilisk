@@ -2,6 +2,8 @@ package de.upb.dss.basilisk.controllers;
 
 import de.upb.dss.basilisk.Basilisk;
 import de.upb.dss.basilisk.bll.Benchmark;
+import de.upb.dss.basilisk.bll.ContinuousDelivery;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,17 +21,20 @@ public class BasiliskAPIController {
     public String runBenchmark() {
         Properties appProps = Basilisk.applicationProperties;
         
-        String condigpath = appProps.getProperty("benchmarkpath");
-        String tentrisport = appProps.getProperty("tentrisport");
-        String rootpwd = appProps.getProperty("rootpassword");
+        String continuousBmPath = appProps.getProperty("continuousBmPath");
+        String metadataFileName = appProps.getProperty("metadataFileName");
+        String benchmarkedFileName = appProps.getProperty("benchmarkedFileName");
+        String continuousErrorLogFileName = appProps.getProperty("continuousErrorLogFileName");
+        String bmWorkspacePath = appProps.getProperty("bmWorkSpace");
 
         int exitcode = -1;
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
-
+        
+        ContinuousDelivery obj = new ContinuousDelivery(continuousBmPath, metadataFileName, benchmarkedFileName, continuousErrorLogFileName, bmWorkspacePath);
         try {
-            exitcode = Benchmark.runBenchmark("9080", "tentris", "sp2b.nt", "sp2b.txt", "version1");
+            exitcode = obj.forEachStore();
         } catch (Exception ex) {
             ex.printStackTrace(pw);
             return sw.toString();
@@ -51,9 +56,9 @@ public class BasiliskAPIController {
 	}catch (Exception e)
 	{
 		if(exitcode == 0) {
-			return "Successfully ran";
+			return "Ran successfully\n";
 		}else{
-			return "Something went wrong.";
+			return "Something went wrong.\n";
 		}
 	}
     }
