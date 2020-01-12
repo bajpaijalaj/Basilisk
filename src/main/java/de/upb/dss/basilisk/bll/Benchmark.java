@@ -197,8 +197,8 @@ public class Benchmark
 							+ testDatasetPath 
 							+ ":/staging --name "
 							+ serverName + "_server cbm:" + serverName
-							+ " --file /staging/"
-							+ testDataset + " /test";
+							+ " /jena-fuseki/fuseki-server --file /staging/"
+							+ testDataset + " /sparql";
 				}
 
 				//Run the command.
