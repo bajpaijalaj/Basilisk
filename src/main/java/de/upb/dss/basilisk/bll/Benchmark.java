@@ -23,7 +23,7 @@ public class Benchmark
 	static String configPath;
 	static Properties appProps;
 	
-	static String serverName, port, testDataset, queryFile, versionNumber, testDatasetPath;
+	static String serverName, port, testDataset, queryFile, versionNumber, testDatasetPath, iguanaIdPath;
 	
 	public static int runBenchmark(String argPort, String argServerName, String argTestDataSet, String argQueryFile, String argVersionNumber) throws IOException, InterruptedException 
 	{
@@ -34,6 +34,7 @@ public class Benchmark
 		logFilePath = appProps.getProperty("logFilePath");
 		configPath = appProps.getProperty("configPath");
 		testDatasetPath = appProps.getProperty("testDatasetPath");
+		iguanaIdPath = appProps.getProperty("iguanaIdPath");
 		
 		//Set all the required info for running the benchmark.
 		serverName = argServerName;
@@ -58,7 +59,7 @@ public class Benchmark
 	
 	protected static void renameResults() throws IOException
 	{
-		BufferedReader Buff = new BufferedReader(new FileReader(iguanaPath + "suite.id"));
+		BufferedReader Buff = new BufferedReader(new FileReader(iguanaIdPath));
         String id = Buff.readLine();
         System.out.println(id);
         
