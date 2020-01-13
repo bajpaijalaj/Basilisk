@@ -61,7 +61,6 @@ public class Benchmark
 	{
 		BufferedReader Buff = new BufferedReader(new FileReader(iguanaIdPath));
         String id = Buff.readLine();
-        System.out.println(id);
         
 		String result1 = appProps.getProperty("result1") + id + "-1-1.nt";
 		String result2 = appProps.getProperty("result2") + id + "-1-2.nt";
