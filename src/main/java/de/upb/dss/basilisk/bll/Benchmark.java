@@ -61,7 +61,7 @@ public class Benchmark
 	protected static void renameResults() throws IOException
 	{
 		BufferedReader Buff = new BufferedReader(new FileReader(iguanaIdPath));
-        String id = Buff.readLine();
+		String id = Buff.readLine();
         
 		String result1 = appProps.getProperty("result") + id + "-1-1.nt";
 		String result2 = appProps.getProperty("result") + id + "-1-2.nt";
