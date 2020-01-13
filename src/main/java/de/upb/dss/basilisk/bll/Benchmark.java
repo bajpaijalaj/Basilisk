@@ -63,11 +63,11 @@ public class Benchmark
         String id = Buff.readLine();
         System.out.println(id);
         
-		String result1 = appProps.getProperty("result1" + id + "-1-1.nt");
-		String result2 = appProps.getProperty("result2" + id + "-1-2.nt");
-		String result3 = appProps.getProperty("result3" + id + "-1-3.nt");
-		String result4 = appProps.getProperty("result4" + id + "-1-4.nt");
-		String result5 = appProps.getProperty("result5" + id + "-1-5.nt");
+		String result1 = appProps.getProperty("result1") + id + "-1-1.nt";
+		String result2 = appProps.getProperty("result2") + id + "-1-2.nt";
+		String result3 = appProps.getProperty("result3") + id + "-1-3.nt";
+		String result4 = appProps.getProperty("result4") + id + "-1-4.nt";
+		String result5 = appProps.getProperty("result5") + id + "-1-5.nt";
 		
 		String cmd = "mv " + result1 + " ../results/" + serverName + "_" + versionNumber + "_noClient1.nt";
 		
