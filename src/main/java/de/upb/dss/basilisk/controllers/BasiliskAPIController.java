@@ -20,7 +20,7 @@ public class BasiliskAPIController {
     @RequestMapping("/runbenchmark")
     public String runBenchmark() {
         Properties appProps = Basilisk.applicationProperties;
-        
+
         String continuousBmPath = appProps.getProperty("continuousBmPath");
         String metadataFileName = appProps.getProperty("metadataFileName");
         String benchmarkedFileName = appProps.getProperty("benchmarkedFileName");
@@ -31,7 +31,7 @@ public class BasiliskAPIController {
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
-        
+
         ContinuousDelivery obj = new ContinuousDelivery(continuousBmPath, metadataFileName, benchmarkedFileName, continuousErrorLogFileName, bmWorkspacePath);
         try {
             exitcode = obj.forEachStore();

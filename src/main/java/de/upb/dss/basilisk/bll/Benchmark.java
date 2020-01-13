@@ -1,5 +1,6 @@
 package de.upb.dss.basilisk.bll;
 import java.lang.*;
+import java.nio.file.Paths;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -60,7 +61,7 @@ public class Benchmark
 	protected static void renameResults() throws IOException
 	{
 		BufferedReader Buff = new BufferedReader(new FileReader(iguanaIdPath));
-        String id = Buff.readLine();
+		String id = Buff.readLine();
         
 		String result1 = appProps.getProperty("result") + id + "-1-1.nt";
 		String result2 = appProps.getProperty("result") + id + "-1-2.nt";
@@ -178,6 +179,7 @@ public class Benchmark
 				
 				if(serverName.toLowerCase().equals("tentris"))
 				{
+					testDatasetPath = Paths.get(".").toAbsolutePath().normalize().toString() + testDatasetPath;
 					command = "docker run -p "
 							+ port + ":" + port
 							+ " -v "
