@@ -58,11 +58,15 @@ public class Benchmark
 	
 	protected static void renameResults() throws IOException
 	{
-		String result1 = appProps.getProperty("result1");
-		String result2 = appProps.getProperty("result2");
-		String result3 = appProps.getProperty("result3");
-		String result4 = appProps.getProperty("result4");
-		String result5 = appProps.getProperty("result5");
+		BufferedReader Buff = new BufferedReader(new FileReader(iguanaPath + "suite.id"));
+        String id = Buff.readLine();
+        System.out.println(id);
+        
+		String result1 = appProps.getProperty("result1" + id + "-1-1.nt");
+		String result2 = appProps.getProperty("result2" + id + "-1-2.nt");
+		String result3 = appProps.getProperty("result3" + id + "-1-3.nt");
+		String result4 = appProps.getProperty("result4" + id + "-1-4.nt");
+		String result5 = appProps.getProperty("result5" + id + "-1-5.nt");
 		
 		String cmd = "mv " + result1 + " ../results/" + serverName + "_" + versionNumber + "_noClient1.nt";
 		
@@ -83,6 +87,8 @@ public class Benchmark
 		cmd = "mv " + result5 + " ../results/" + serverName + "_" + versionNumber + "_noClient32.nt";
 		
 		Runtime.getRuntime().exec(cmd, null, iguanaPath);
+		
+		Buff.close();
 	}
 	
 	protected static int runTripleStores()
