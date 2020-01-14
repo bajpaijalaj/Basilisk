@@ -129,6 +129,7 @@ public class ContinuousDelivery {
 	}
 
 	public int downloadRepo(String url) throws IOException, InterruptedException {
+		System.out.println("Downloading of the release(.zip) will start ..");
 		try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
 				FileOutputStream fileOutputStream = new FileOutputStream(
 						this.continuousBmPath + this.currentStore + ".zip")) {
@@ -156,6 +157,7 @@ public class ContinuousDelivery {
 				if (!benchmarkedVersionsList.contains(versionObj.get("name"))) {
 					this.delRepository();
 					this.currentBenchmarkedVersion = (String) versionObj.get("name");
+					System.out.println("Benchmarking will run for version: "+ this.currentBenchmarkedVersion);
 					int flag = this.downloadRepo((String) versionObj.get("zipball_url"));
 					if (flag == 1) {
 						this.benchmark();
@@ -245,6 +247,7 @@ public class ContinuousDelivery {
 			this.updateErrorLog("Could be a Metadata.json or Benchmarked.json file parsing issue", e.toString());
 			e.printStackTrace();
 		}
+		System.out.println("One run completed");
 		return 0;
 	}
 }
