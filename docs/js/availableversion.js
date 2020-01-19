@@ -37,12 +37,12 @@ async function getdetails(dataset)
     
     for(var i=0;i<available_version.length;i++)
     {
-        if(available_version[i].search("tentris")!=-1)
+        if(available_version[i].search("Tentris")!=-1)
         {
             tentrisversions.push(available_version[i]);
         }
         else{
-            if(available_version[i].search("virtuoso")!=-1)
+            if(available_version[i].search("Virtuoso")!=-1)
         {
             virtuosoversions.push(available_version[i]);
         }

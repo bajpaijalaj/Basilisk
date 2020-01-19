@@ -418,8 +418,14 @@ var noOfClients;
 
 
 function downloadCsv(){  
+  window.open('../all_results.csv', 'Download');
   
   }
+  function downloadRdf(){  
+    window.open('../results_task_2-1-1.nt', 'Download');
+    
+    }
+  
 
   function datasets(datasetstring)
   {
@@ -533,7 +539,7 @@ function downloadCsv(){
 
     function get2dArray() {
       var datasetsstring="http://131.234.28.165:3030/$/datasets";
-      //window.open('../expected_csv.csv', 'Download');
+      
       axios({
           method: 'get',
           url: datasetsstring})
@@ -555,17 +561,17 @@ function downloadCsv(){
         
         alert("please select version for Tentris");
       }
-      TentrisVersionSelected="tentris$"+TentrisVersionSelected;
+      TentrisVersionSelected="Tentris$"+TentrisVersionSelected;
       
 
-      var e = document.getElementById("FusekiVersion");
+      /*var e = document.getElementById("FusekiVersion");
       var FusekiVersionSelected = e.options[e.selectedIndex].value;
       if(FusekiVersionSelected==null)
       {
         
         alert("please select version for Fuseki");
       }
-      FusekiVersionSelected="fuseki$"+FusekiVersionSelected;
+      FusekiVersionSelected="fuseki$"+FusekiVersionSelected;*/
 
 
       var e = document.getElementById("VirtuosoVersion");
@@ -575,7 +581,7 @@ function downloadCsv(){
         
         alert("please select version for Virtuoso");
       }
-      VirtuosoVersionSelected="virtuoso$"+VirtuosoVersionSelected;
+      VirtuosoVersionSelected="Virtuoso$"+VirtuosoVersionSelected;
 
       var TentrisArrayNumber=0;
       var VirtuosoArrayNumber=0;
@@ -595,12 +601,12 @@ function downloadCsv(){
           triplestoreVirtuso=arr[VirtuosoArrayNumber];
           triplestoreVirtuso=triplestoreVirtuso.slice(1,7);
 
-        }else
+        }/*else
         if(arr[i][0] == FusekiVersionSelected){
           FusekiArrayNumber=i;
           triplestoreFuseki=arr[FusekiArrayNumber];
           triplestoreFuseki=triplestoreFuseki.slice(1,7);
-        }
+        }*/
       }
       
       }
@@ -683,9 +689,9 @@ function downloadCsv(){
               //triplestoreFuseki
             ],
             types: {
-              tentris: 'area',
+              Tentris: 'area',
               //fuseki: 'area-spline',
-              virtuoso:'area-spline'
+              Virtuoso:'area-spline'
                 // 'line', 'spline', 'step', 'area', 'area-step' are also available to stack
             },
             groups: [['Tentris','Virtuoso']]
@@ -762,6 +768,10 @@ function downloadCsv(){
         }
       });
 
+    }
+    function clearGraph()
+    {
+      window.location.reload()
     }
 
     get2dArray();
