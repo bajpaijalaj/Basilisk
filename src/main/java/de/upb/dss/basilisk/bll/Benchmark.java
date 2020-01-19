@@ -1,5 +1,6 @@
 package de.upb.dss.basilisk.bll;
 import java.lang.*;
+import java.nio.file.Paths;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +24,7 @@ public class Benchmark
 	static String configPath;
 	static Properties appProps;
 	
-	static String serverName, port, testDataset, queryFile, versionNumber, testDatasetPath;
+	static String serverName, port, testDataset, queryFile, versionNumber, testDatasetPath, iguanaIdPath;
 	
 	public static int runBenchmark(String argPort, String argServerName, String argTestDataSet, String argQueryFile, String argVersionNumber) throws IOException, InterruptedException 
 	{
@@ -34,6 +35,7 @@ public class Benchmark
 		logFilePath = appProps.getProperty("logFilePath");
 		configPath = appProps.getProperty("configPath");
 		testDatasetPath = appProps.getProperty("testDatasetPath");
+		iguanaIdPath = appProps.getProperty("iguanaIdPath");
 		
 		//Set all the required info for running the benchmark.
 		serverName = argServerName;
@@ -58,11 +60,14 @@ public class Benchmark
 	
 	protected static void renameResults() throws IOException
 	{
-		String result1 = appProps.getProperty("result1");
-		String result2 = appProps.getProperty("result2");
-		String result3 = appProps.getProperty("result3");
-		String result4 = appProps.getProperty("result4");
-		String result5 = appProps.getProperty("result5");
+		BufferedReader Buff = new BufferedReader(new FileReader(iguanaIdPath));
+		String id = Buff.readLine();
+        
+		String result1 = appProps.getProperty("result") + id + "-1-1.nt";
+		String result2 = appProps.getProperty("result") + id + "-1-2.nt";
+		String result3 = appProps.getProperty("result") + id + "-1-3.nt";
+		String result4 = appProps.getProperty("result") + id + "-1-4.nt";
+		String result5 = appProps.getProperty("result") + id + "-1-5.nt";
 		
 		String cmd = "mv " + result1 + " ../results/" + serverName + "_" + versionNumber + "_noClient1.nt";
 		
@@ -83,6 +88,8 @@ public class Benchmark
 		cmd = "mv " + result5 + " ../results/" + serverName + "_" + versionNumber + "_noClient32.nt";
 		
 		Runtime.getRuntime().exec(cmd, null, iguanaPath);
+		
+		Buff.close();
 	}
 	
 	protected static int runTripleStores()
@@ -172,6 +179,7 @@ public class Benchmark
 				
 				if(serverName.toLowerCase().equals("tentris"))
 				{
+					testDatasetPath = Paths.get(".").toAbsolutePath().normalize().toString() + testDatasetPath;
 					command = "docker run -p "
 							+ port + ":" + port
 							+ " -v "
@@ -188,6 +196,17 @@ public class Benchmark
 							+ port + ":" + port
 							+ " --name "
 							+ serverName + "_server cbm:" + serverName;
+				}
+				else if(serverName.toLowerCase().equals("fuseki"))
+				{
+					command = "docker run -p "
+							+ port + ":3030"
+							+ " -v "
+							+ testDatasetPath 
+							+ ":/staging --name "
+							+ serverName + "_server cbm:" + serverName
+							+ " /jena-fuseki/fuseki-server --file /staging/"
+							+ testDataset + " /sparql";
 				}
 
 				//Run the command.
