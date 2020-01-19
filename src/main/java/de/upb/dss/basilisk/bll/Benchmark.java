@@ -373,7 +373,7 @@ public class Benchmark
 			//Port number and query file to insert into benchmark template
 			Map<String, Object> templateData = new HashMap<>();
 			templateData.put("port", port);
-			templateData.put("testData", queryFile);
+			templateData.put("queryFileName", queryFile);
 			templateData.put("connName", connName);
 			templateData.put("datasetName", datasetName);
 

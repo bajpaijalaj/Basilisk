@@ -43,11 +43,11 @@ stresstestArg.warmupUpdates=/dev/null
 
 #sparqlConfig1=#OF SIMULATED USERS, CLASS, TIMEOUT, QUERIES FILE, SIMUALTED FIXED NETWORK LATENCY, SIMULATED GAUSSIAN RANDOM NETWORK LATENCY
 
-sparqlConfig1=1,org.aksw.iguana.tp.tasks.impl.stresstest.worker.impl.SPARQLWorker, 180000, ${testData}, 0, 0
-sparqlConfig2=4,org.aksw.iguana.tp.tasks.impl.stresstest.worker.impl.SPARQLWorker, 180000, ${testData}, 0, 0
-sparqlConfig3=8,org.aksw.iguana.tp.tasks.impl.stresstest.worker.impl.SPARQLWorker, 180000, ${testData}, 0, 0
-sparqlConfig4=16,org.aksw.iguana.tp.tasks.impl.stresstest.worker.impl.SPARQLWorker, 180000, ${testData}, 0, 0
-sparqlConfig5=32,org.aksw.iguana.tp.tasks.impl.stresstest.worker.impl.SPARQLWorker, 180000, ${testData}, 0, 0
+sparqlConfig1=1,org.aksw.iguana.tp.tasks.impl.stresstest.worker.impl.SPARQLWorker, 180000, ${queryFileName}, 0, 0
+sparqlConfig2=4,org.aksw.iguana.tp.tasks.impl.stresstest.worker.impl.SPARQLWorker, 180000, ${queryFileName}, 0, 0
+sparqlConfig3=8,org.aksw.iguana.tp.tasks.impl.stresstest.worker.impl.SPARQLWorker, 180000, ${queryFileName}, 0, 0
+sparqlConfig4=16,org.aksw.iguana.tp.tasks.impl.stresstest.worker.impl.SPARQLWorker, 180000, ${queryFileName}, 0, 0
+sparqlConfig5=32,org.aksw.iguana.tp.tasks.impl.stresstest.worker.impl.SPARQLWorker, 180000, ${queryFileName}, 0, 0
 
 stresstestArg.workers=sparqlConfig1
 stresstestArg.queryHandler=org.aksw.iguana.tp.query.impl.InstancesQueryHandler
